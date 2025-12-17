@@ -4,6 +4,8 @@
 
 ![Alert Aid Banner](https://capsule-render.vercel.app/api?type=waving&color=000000&height=300&section=header&text=Alert%20Aid&fontSize=90&animation=fadeIn&fontAlignY=38&desc=AI-Powered%20Disaster%20Prediction%20&%20Response%20System&descAlignY=51&descAlign=62)
 
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=2F855A&background=00000000&center=true&vCenter=true&width=435&lines=Predicting+Floods...;Monitoring+Earthquakes...;Tracking+Wildfires...;Analyzing+Storms...;Saving+Lives." alt="Typing SVG" /></a>
+
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
@@ -19,7 +21,7 @@
 
 ---
 
-## 🌟 Overview
+![Overview](https://capsule-render.vercel.app/api?type=rect&color=009688&height=70&section=header&text=Overview&fontSize=40&fontColor=ffffff)
 
 **Alert Aid** is a production-ready disaster prediction system that leverages **Artificial Intelligence** to save lives. By analyzing real-time environmental data, it predicts the probability of natural disasters like floods, wildfires, earthquakes, and storms with **90%+ accuracy**.
 
@@ -33,7 +35,7 @@
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+![Tech Stack](https://capsule-render.vercel.app/api?type=rect&color=3776AB&height=70&section=header&text=Tech%20Stack&fontSize=40&fontColor=ffffff)
 
 <div align="center">
 
@@ -58,7 +60,7 @@
 
 ---
 
-## ⚡ Quick Start
+![Quick Start](https://capsule-render.vercel.app/api?type=rect&color=F7931E&height=70&section=header&text=Quick%20Start&fontSize=40&fontColor=ffffff)
 
 ### 1. Clone the Repository
 ```bash
@@ -88,7 +90,7 @@ npm start
 
 ---
 
-## 📊 New Dashboards
+![New Dashboards](https://capsule-render.vercel.app/api?type=rect&color=FF4B4B&height=70&section=header&text=New%20Dashboards&fontSize=40&fontColor=ffffff)
 
 ### 🧠 Streamlit ML Playground
 Located at `http://localhost:8501`
@@ -108,7 +110,7 @@ Integrated full-stack monitoring for production reliability.
 
 ---
 
-## 📱 Screenshots
+![Screenshots](https://capsule-render.vercel.app/api?type=rect&color=362D59&height=70&section=header&text=Screenshots&fontSize=40&fontColor=ffffff)
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/ayushap18/congenial-waddle/main/public/Gemini_Generated_Image_7c3uv87c3uv87c3u.png" width="45%" alt="Dashboard" />
@@ -207,7 +209,7 @@ Contributions are what make the open source community such an amazing place to l
 
 - **Error Handling**: Graceful fallbacks and user-friendly error messages
 
-## 📁 Project Structure
+![Project Structure](https://capsule-render.vercel.app/api?type=rect&color=795548&height=70&section=header&text=Project%20Structure&fontSize=40&fontColor=ffffff)
 
 ---
 
@@ -263,13 +265,13 @@ Contributions are what make the open source community such an amazing place to l
 
 - **Reverse Geocoding**: Triple API fallback system
 
-## 🔧 Configuration
+![Configuration](https://capsule-render.vercel.app/api?type=rect&color=607D8B&height=70&section=header&text=Configuration&fontSize=40&fontColor=ffffff)
 
 ---
 
 ### Environment Variables
 
-## 🚀 Installation
+![Installation](https://capsule-render.vercel.app/api?type=rect&color=2F855A&height=70&section=header&text=Installation&fontSize=40&fontColor=ffffff)
 
 Create `.env.local` for development:
 
@@ -463,7 +465,7 @@ CORS_ORIGINS=http://localhost:3001,https://yourdomain.com**Note**: These are dee
 
 Example (curl):
 
-## 💻 Usage
+![Usage](https://capsule-render.vercel.app/api?type=rect&color=9C27B0&height=70&section=header&text=Usage&fontSize=40&fontColor=ffffff)
 
 ```bash
 
@@ -522,7 +524,7 @@ curl -X POST http://127.0.0.1:8001/model/retrain
 
 ---
 
-## 📡 API Reference
+![API Reference](https://capsule-render.vercel.app/api?type=rect&color=000000&height=70&section=header&text=API%20Reference&fontSize=40&fontColor=ffffff)
 
 ### Base URL
 ```
@@ -591,7 +593,7 @@ GET /predict/ml-metrics
 
 ---
 
-## 🌐 Deployment
+![Deployment](https://capsule-render.vercel.app/api?type=rect&color=0B0D0E&height=70&section=header&text=Deployment&fontSize=40&fontColor=ffffff)
 
 ### Deploy Frontend to Vercel
 
@@ -640,7 +642,7 @@ GET /predict/ml-metrics
 
 ---
 
-## 🤝 Contributing
+![Contributing](https://capsule-render.vercel.app/api?type=rect&color=362D59&height=70&section=header&text=Contributing&fontSize=40&fontColor=ffffff)
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -652,13 +654,13 @@ Contributions are what make the open source community such an amazing place to l
 
 ---
 
-## 📜 License
+![License](https://capsule-render.vercel.app/api?type=rect&color=5865F2&height=70&section=header&text=License&fontSize=40&fontColor=ffffff)
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-## 🙏 Acknowledgments
+![Acknowledgments](https://capsule-render.vercel.app/api?type=rect&color=FF0000&height=70&section=header&text=Acknowledgments&fontSize=40&fontColor=ffffff)
 
 Special thanks to the tools and communities that made this project possible:
 
