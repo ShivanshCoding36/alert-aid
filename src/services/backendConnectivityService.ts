@@ -91,12 +91,12 @@ class BackendConnectivityService {
       diagnostics.backend.status = 'connected';
       
       // Test individual endpoints from system verification response
-      // Skip testing template URLs (those with {lat}/{lon} placeholders)
-      // Use testIndividualEndpoints instead which has proper coordinates
       if (response.api_endpoints) {
-        // Just log the endpoints, don't test template strings
         console.log('✅ Backend endpoints available:', Object.keys(response.api_endpoints));
       }
+      
+      // Always test individual endpoints to populate the endpoints object
+      await this.testIndividualEndpoints(diagnostics);
       
     } catch (error) {
       diagnostics.backend.reachable = false;
@@ -126,7 +126,8 @@ class BackendConnectivityService {
     const endpoints = {
       health: { url: `${baseUrl}/api/health`, method: 'GET' },
       weather: { url: `${baseUrl}/api/weather/${testLat}/${testLon}`, method: 'GET' },
-      alerts: { url: `${baseUrl}/api/alerts?lat=${testLat}&lon=${testLon}`, method: 'GET' },
+      alerts: { url: `${baseUrl}/api/alerts/active?lat=${testLat}&lon=${testLon}`, method: 'GET' },
+      predict: { url: `${baseUrl}/api/predict/disaster-risk?lat=${testLat}&lon=${testLon}`, method: 'GET' },
     };
 
     for (const [name, config] of Object.entries(endpoints)) {
