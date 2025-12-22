@@ -167,11 +167,11 @@ async def get_weather_forecast(lat: float, lon: float, days: int = 7):
                             "source": "OpenWeatherMap One Call API 3.0",
                             "is_real": True
                         }
-            else:
-                print(f"⚠️ One Call API failed with status {response.status_code}, using fallback")
-                raise requests.RequestException(f"API returned {response.status_code}")
-        else:
-            raise requests.RequestException("No API key available")
+                    else:
+                        print(f"⚠️ One Call API failed with status {response.status}, using fallback")
+        
+        # Fallback if no API key or API call failed
+        return _generate_fallback_forecast(lat, lon, days)
             
     except Exception as e:
         print(f"❌ Forecast API error: {e}, generating fallback data")
