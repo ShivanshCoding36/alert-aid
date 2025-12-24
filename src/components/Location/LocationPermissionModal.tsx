@@ -19,7 +19,7 @@ export type LocationPermissionState = 'requesting' | 'granted' | 'denied' | 'man
 // Types now imported from types.ts
 
 // Full-screen modal overlay
-const ModalOverlay = styled.div<{ isOpen: boolean }>`
+const ModalOverlay = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -31,8 +31,8 @@ const ModalOverlay = styled.div<{ isOpen: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
-  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+  visibility: ${({ $isOpen }) => ($isOpen ? 'visible' : 'hidden')};
   transition: all 0.3s ease;
   padding: ${enhancedSpacing[6]};
 `;
@@ -248,7 +248,7 @@ export const LocationPermissionModal: React.FC<LocationPermissionModalProps> = (
   if (!isOpen) return null;
 
   return (
-    <ModalOverlay isOpen={isOpen}>
+    <ModalOverlay $isOpen={isOpen}>
       <ModalContent role="dialog" aria-labelledby="location-modal-title" aria-describedby="location-modal-description">
         <ModalHeader>
           <LocationIcon>

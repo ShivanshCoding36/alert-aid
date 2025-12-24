@@ -1,5 +1,5 @@
-import React, { useCallback, useState, useEffect, Suspense } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useCallback, useState, useEffect, Suspense, useRef } from 'react';
+import styled, { keyframes, css } from 'styled-components';
 import { spacing, breakpoints } from '../../styles/spacing';
 import { enhancedSpacing, enhancedGrid } from '../../styles/enhanced-design-system';
 import { 
@@ -12,7 +12,8 @@ import CurrentAlerts from './CurrentAlerts';
 import MLPredictionAccuracy from './MLPredictionAccuracy';
 import ActionButtons from './ActionButtons';
 import SevenDayForecast from './SevenDayForecast';
-import HistoricalTrends from './HistoricalTrends';
+import AIMLSummary from './AIMLSummary';
+import MultiHazardPanel from './MultiHazardPanel';
 import GeolocationManager from '../Location/GeolocationManager';
 import EmergencyResponsePanel from '../Emergency/EmergencyResponsePanel';
 import EvacuationSafetyModule from '../Safety/EvacuationSafetyModule';
@@ -20,14 +21,15 @@ import ResourceManagementDashboard from '../Resources/ResourceManagementDashboar
 import CommunicationHub from '../Communication/CommunicationHub';
 import EnhancedWeatherWidget from '../Dashboard/EnhancedWeatherWidget';
 import AirQualityWidget from './AirQualityWidget';
+import LeafletFloodMap from '../Map/LeafletFloodMap';
 import { SystemDiagnostics } from '../Diagnostics/SystemDiagnostics';
 import { LoadingOverlay, SkeletonDashboard } from '../Layout/LoadingStates';
 import { useAutoRefresh, useRefreshSettings } from '../../hooks/useAutoRefresh';
 import { useLiveDataExport } from '../../services/liveDataExport';
-import { RefreshCw, Clock, Download } from 'lucide-react';
+import { RefreshCw, Clock } from 'lucide-react';
 import { enhancedLocationService } from '../../services/enhancedLocationService';
 import SimpleWeatherService from '../../services/simpleWeatherService';
-import WeatherForecastService from '../../services/weatherForecastService';
+import enhancedForecastService from '../../services/enhancedForecastService';
 import airQualityService, { AQIData } from '../../services/airQualityService';
 import RiskCalculationService, { WeatherRiskFactors } from '../../services/riskCalculationService';
 import logger from '../../utils/logger';
@@ -35,6 +37,7 @@ import GlobeRiskHero from './GlobeRiskHero';
 import { ForecastData } from '../../types';
 import ErrorBoundary from '../common/ErrorBoundary';
 import { useCurrentAlerts } from '../../hooks/useDashboard';
+import { useLocation } from '../../contexts/LocationContext';
 
 // Alert risk severity weights for risk calculation
 const SEVERITY_WEIGHTS = {
@@ -71,15 +74,15 @@ const calculateAlertRisk = (alerts: any[]): number => {
 
 const DashboardContainer = styled.main`
   min-height: 100vh;
-  padding-top: 64px; /* Updated for 64px navigation bar */
-  background: transparent; /* Let starfield show through */
+  padding-top: 64px;
+  background: transparent;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   color: ${productionColors.text.primary};
+  position: relative;
+  z-index: 1;
   
   /* Enhanced smooth scrolling */
   ${productionScrollbar}
-  
-  ${productionAnimations.keyframes.spin}
 `;
 
 // ENHANCED 16/24px GRID SYSTEM - Zero overlapping guarantee
@@ -97,6 +100,8 @@ const DashboardGrid = styled.div`
     grid-template-columns: 380px 1fr 380px; /* Fixed 380px sidebars, flexible center */
     grid-template-areas:
       "left center right"
+      "hazards hazards hazards"
+      "floodmap floodmap floodmap"
       "weather weather weather"
       "diagnostics diagnostics diagnostics"
       "emergency emergency emergency"
@@ -112,6 +117,8 @@ const DashboardGrid = styled.div`
     grid-template-areas:
       "left center"
       "right center"
+      "hazards hazards"
+      "floodmap floodmap"
       "weather weather"
       "diagnostics diagnostics"
       "emergency emergency"
@@ -126,6 +133,8 @@ const DashboardGrid = styled.div`
     grid-template-columns: 1fr;
     grid-template-areas:
       "center"
+      "hazards"
+      "floodmap"
       "weather"
       "diagnostics"
       "left"
@@ -195,7 +204,7 @@ const DashboardCard = styled.div<{ animationDelay?: number }>`
   backdrop-filter: blur(10px);
   
   /* Production animation system with stagger effect */
-  animation: ${fadeInUp} ${productionAnimations.duration.slower} ${productionAnimations.easing.smooth};
+  ${css`animation: ${fadeInUp} ${productionAnimations.duration.slower} ${productionAnimations.easing.smooth};`}
   animation-delay: ${({ animationDelay }) => animationDelay || 0}ms;
   animation-fill-mode: both;
   
@@ -270,6 +279,14 @@ const DiagnosticsSection = styled.section`
   grid-area: diagnostics;
 `;
 
+const HazardsSection = styled.section`
+  grid-area: hazards;
+`;
+
+const FloodMapSection = styled.section`
+  grid-area: floodmap;
+`;
+
 // Live Data Status Bar
 const LiveDataStatusBar = styled.div`
   position: fixed;
@@ -322,34 +339,60 @@ const Dashboard: React.FC = () => {
   const [isCalculatingRisk, setIsCalculatingRisk] = useState(true);
   const [forecastData, setForecastData] = useState<ForecastData[] | null>(null);
   const [forecastError, setForecastError] = useState<boolean>(false);
+  const [forecastSource, setForecastSource] = useState<string>('OpenWeatherMap');
+  const [forecastIsLive, setForecastIsLive] = useState<boolean>(true);
   const [aqiData, setAqiData] = useState<AQIData | null>(null);
   const [aqiLoading, setAqiLoading] = useState(false);
+  
+  // Get location for hazard panels
+  const { currentLocation } = useLocation();
   const [aqiError, setAqiError] = useState<boolean>(false);
+  
+  // Ref for emergency section scroll
+  const emergencySectionRef = useRef<HTMLDivElement>(null);
   
   const { data: alerts } = useCurrentAlerts();
   const { refreshInterval, autoRefreshEnabled } = useRefreshSettings();
-  const { exportBothFormats, hasData } = useLiveDataExport();
+  const { exportBothFormats } = useLiveDataExport();
+  
+  // Scroll to emergency section
+  const scrollToEmergency = useCallback(() => {
+    emergencySectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
-  // Fetch 7-day forecast data
+  // Fetch 7-day forecast data with enhanced service (30-min cache, multiple APIs)
   const fetchForecastData = useCallback(async () => {
     try {
       setForecastError(false);
       const loc = await enhancedLocationService.getCurrentLocation();
-      const forecast = await WeatherForecastService.getForecast(loc.latitude, loc.longitude, 7);
+      const forecast = await enhancedForecastService.getForecast(loc.latitude, loc.longitude);
       
       // Convert to component format
-      const convertedForecast = WeatherForecastService.convertToForecastData(forecast.forecast);
-      setForecastData(convertedForecast);
+      const convertedForecast = forecast.forecast.map(day => ({
+        day: day.day,
+        riskScore: day.riskScore,
+        precipitation: day.precipitation,
+        temperature: day.temperature,
+        windSpeed: day.wind_speed,
+        conditions: day.conditions,
+      }));
       
-      logger.log('📅 7-day forecast loaded:', {
+      setForecastData(convertedForecast);
+      setForecastSource(forecast.cached ? `${forecast.source} (cached)` : forecast.source);
+      setForecastIsLive(forecast.is_real);
+      
+      logger.log('📅 Enhanced 7-day forecast loaded:', {
         days: convertedForecast.length,
         source: forecast.source,
-        is_real: forecast.is_real
+        cached: forecast.cached,
+        is_real: forecast.is_real,
+        city: forecast.location.city
       });
     } catch (error) {
-      logger.error('❌ Forecast fetch failed:', error);
+      logger.error('❌ Enhanced forecast fetch failed:', error);
       setForecastData(null);
       setForecastError(true);
+      setForecastIsLive(false);
     }
   }, []);
 
@@ -516,7 +559,7 @@ const Dashboard: React.FC = () => {
             }} />
             <span>
               {isRefreshing ? 'Refreshing...' : 
-               autoRefreshEnabled ? `Auto-refresh: ${refreshInterval}min` : 'Auto-refresh: Off'}
+               autoRefreshEnabled ? `Auto: ${refreshInterval}min` : 'Manual'}
             </span>
           </div>
           
@@ -529,25 +572,7 @@ const Dashboard: React.FC = () => {
         </div>
         
         <div className="status-section">
-          <span>Last updated: {lastRefresh.toLocaleTimeString()}</span>
-          {hasData && (
-            <button 
-              onClick={handleDownloadReport}
-              style={{
-                background: 'none',
-                border: 'none', 
-                color: 'inherit',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                fontSize: '10px'
-              }}
-            >
-              <Download size={10} />
-              Export Data
-            </button>
-          )}
+          <span>Updated: {lastRefresh.toLocaleTimeString()}</span>
         </div>
       </LiveDataStatusBar>
 
@@ -558,7 +583,7 @@ const Dashboard: React.FC = () => {
         <LeftSidebar>
           <DashboardCard animationDelay={100}>
             <ErrorBoundary componentName="Current Alerts">
-              <CurrentAlerts />
+              <CurrentAlerts onEmergencyClick={scrollToEmergency} />
             </ErrorBoundary>
           </DashboardCard>
           
@@ -591,8 +616,14 @@ const Dashboard: React.FC = () => {
           </ErrorBoundary>
         </CenterArea>
 
-        {/* Right Sidebar - Forecast & Trends */}
+        {/* Right Sidebar - AI Summary & Forecast */}
         <RightSidebar>
+          <DashboardCard animationDelay={150}>
+            <ErrorBoundary componentName="AI/ML Summary">
+              <AIMLSummary floodProbability={globalRiskScore} />
+            </ErrorBoundary>
+          </DashboardCard>
+          
           <DashboardCard animationDelay={250}>
             <ErrorBoundary componentName="Weather Forecast">
               {forecastError ? (
@@ -600,17 +631,40 @@ const Dashboard: React.FC = () => {
                   Unable to load forecast data. Please try again later.
                 </div>
               ) : (
-                <SevenDayForecast forecast={forecastData || undefined} />
+                <SevenDayForecast 
+                  forecast={forecastData || undefined}
+                  isLive={forecastIsLive}
+                  source={forecastSource}
+                />
               )}
             </ErrorBoundary>
           </DashboardCard>
-          
-          <DashboardCard animationDelay={350}>
-            <ErrorBoundary componentName="Historical Trends">
-              <HistoricalTrends />
+        </RightSidebar>
+
+        {/* Multi-Hazard Risk Assessment - Full Width */}
+        <HazardsSection>
+          <DashboardCard animationDelay={300}>
+            <ErrorBoundary componentName="Multi-Hazard Risk">
+              <MultiHazardPanel 
+                latitude={currentLocation?.latitude || 28.6139}
+                longitude={currentLocation?.longitude || 77.2090}
+                cityName={currentLocation?.city || 'New Delhi'}
+              />
             </ErrorBoundary>
           </DashboardCard>
-        </RightSidebar>
+        </HazardsSection>
+
+        {/* Flood Risk Map - Full Width */}
+        <FloodMapSection>
+          <DashboardCard animationDelay={350}>
+            <ErrorBoundary componentName="Flood Risk Map">
+              <LeafletFloodMap 
+                center={[currentLocation?.latitude || 28.6139, currentLocation?.longitude || 77.2090]}
+                zoom={12}
+              />
+            </ErrorBoundary>
+          </DashboardCard>
+        </FloodMapSection>
 
         {/* Weather Dashboard - Full Width with Enhanced Widget */}
         <WeatherSection>
@@ -638,7 +692,7 @@ const Dashboard: React.FC = () => {
         </DiagnosticsSection>
 
         {/* Emergency Response - Full Width */}
-        <EmergencySection>
+        <EmergencySection ref={emergencySectionRef}>
           <DashboardCard animationDelay={400}>
             <ErrorBoundary componentName="Emergency Response">
               <EmergencyResponsePanel />

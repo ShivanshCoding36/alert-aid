@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import styled from 'styled-components';
-import { Card, Button } from '../../styles/components';
+import styled, { keyframes, css } from 'styled-components';
 
 // Types for emergency system
 interface EmergencyContact {
@@ -29,150 +28,294 @@ interface SOSState {
   contactsNotified: string[];
 }
 
-// Styled components
-const EmergencyContainer = styled(Card)`
-  background: ${({ theme }) => theme.colors.surface.elevated};
-  border: 2px solid ${({ theme }) => theme.colors.danger[600]};
-  padding: ${({ theme }) => theme.spacing.lg};
+// =====================================================
+// ANIMATIONS
+// =====================================================
+
+const pulse = keyframes`
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+`;
+
+const glow = keyframes`
+  0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 20px rgba(239, 68, 68, 0.1); }
+  50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6), inset 0 0 30px rgba(239, 68, 68, 0.2); }
+`;
+
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const urgentFlash = keyframes`
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+`;
+
+// =====================================================
+// STYLED COMPONENTS - MODERN SOS THEME
+// =====================================================
+
+const EmergencyContainer = styled.div`
+  background: linear-gradient(165deg, 
+    rgba(15, 23, 42, 0.98) 0%, 
+    rgba(30, 41, 59, 0.95) 50%, 
+    rgba(15, 23, 42, 0.98) 100%
+  );
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 
+    0 0 0 1px rgba(239, 68, 68, 0.1),
+    0 20px 50px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  ${css`animation: ${fadeIn} 0.5s ease-out;`}
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.5), transparent);
+  }
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+`;
+
+const Title = styled.h2`
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const LiveBadge = styled.span<{ $active: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: ${props => props.$active ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)'};
+  color: ${props => props.$active ? '#22c55e' : '#ef4444'};
+  border: 1px solid ${props => props.$active ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'};
+  
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    ${props => props.$active && css`animation: ${pulse} 1.5s infinite;`}
+  }
+`;
+
+const SOSSection = styled.div`
+  text-align: center;
+  padding: 20px 0;
 `;
 
 const SOSButton = styled.button<{ isActive: boolean }>`
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
-  border: none;
-  font-size: 1.2rem;
+  border: 3px solid ${({ isActive }) => isActive ? 'rgba(239, 68, 68, 0.8)' : 'rgba(239, 68, 68, 0.5)'};
+  font-size: 1.4rem;
   font-weight: bold;
   cursor: pointer;
   position: relative;
-  margin: ${({ theme }) => theme.spacing.lg} auto;
-  display: block;
-  transition: all 0.3s ease;
+  margin: 0 auto 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
-  background: ${({ theme, isActive }) => 
-    isActive ? theme.colors.danger[700] : theme.colors.danger[600]
+  background: ${({ isActive }) => 
+    isActive 
+      ? 'linear-gradient(145deg, rgba(239, 68, 68, 0.8), rgba(220, 38, 38, 0.9))'
+      : 'linear-gradient(145deg, rgba(239, 68, 68, 0.6), rgba(220, 38, 38, 0.7))'
   };
-  color: ${({ theme }) => theme.colors.text.inverse};
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   
-  &:hover {
+  box-shadow: 
+    0 4px 20px rgba(239, 68, 68, 0.3),
+    inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+  
+  &:hover:not(:disabled) {
     transform: scale(1.05);
-    background: ${({ theme }) => theme.colors.danger[700]};
+    box-shadow: 
+      0 8px 30px rgba(239, 68, 68, 0.4),
+      inset 0 -2px 10px rgba(0, 0, 0, 0.2);
   }
   
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
   }
   
-  ${({ isActive }) => isActive && `
-    animation: pulse 1s infinite;
-    
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(215, 38, 56, 0.7); }
-      70% { box-shadow: 0 0 0 20px rgba(215, 38, 56, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(215, 38, 56, 0); }
-    }
-  `}
+  ${({ isActive }) => isActive && css`animation: ${glow} 1s infinite;`}
 `;
 
 const CountdownOverlay = styled.div<{ countdown: number }>`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.colors.text.inverse};
+  color: #fff;
   
-  ${({ countdown }) => countdown <= 3 && `
-    animation: urgentFlash 0.5s infinite;
-    
-    @keyframes urgentFlash {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0.3; }
-    }
+  ${({ countdown }) => countdown <= 3 && css`
+    animation: ${urgentFlash} 0.5s infinite;
+    color: #fef08a;
   `}
 `;
 
-const EmergencySection = styled.div`
-  margin: ${({ theme }) => theme.spacing.lg} 0;
-  
-  h3 {
-    color: ${({ theme }) => theme.colors.text.primary};
-    margin-bottom: ${({ theme }) => theme.spacing.md};
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    gap: ${({ theme }) => theme.spacing.xs};
-  }
+const SOSDescription = styled.p`
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.6;
 `;
 
-const ContactsList = styled.div`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing.sm};
-`;
-
-const ContactItem = styled.div`
+const StatusMessage = styled.div<{ type: 'info' | 'success' | 'warning' | 'error' }>`
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin: 16px 0;
   display: flex;
   align-items: center;
-  justify-content: between;
-  padding: ${({ theme }) => theme.spacing.md};
-  background: ${({ theme }) => theme.colors.surface.default};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  border: 1px solid ${({ theme }) => theme.colors.surface.border};
+  gap: 10px;
+  font-size: 13px;
+  ${css`animation: ${fadeIn} 0.3s ease-out;`}
+  
+  background: ${({ type }) => ({
+    success: 'rgba(34, 197, 94, 0.15)',
+    warning: 'rgba(245, 158, 11, 0.15)',
+    error: 'rgba(239, 68, 68, 0.15)',
+    info: 'rgba(99, 102, 241, 0.15)'
+  })[type]};
+  
+  color: ${({ type }) => ({
+    success: '#22c55e',
+    warning: '#f59e0b',
+    error: '#ef4444',
+    info: '#6366f1'
+  })[type]};
+  
+  border: 1px solid ${({ type }) => ({
+    success: 'rgba(34, 197, 94, 0.3)',
+    warning: 'rgba(245, 158, 11, 0.3)',
+    error: 'rgba(239, 68, 68, 0.3)',
+    info: 'rgba(99, 102, 241, 0.3)'
+  })[type]};
+`;
+
+const Section = styled.div`
+  margin: 24px 0;
+`;
+
+const SectionTitle = styled.h3`
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`;
+
+const ContactsGrid = styled.div`
+  display: grid;
+  gap: 10px;
+`;
+
+const ContactCard = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(239, 68, 68, 0.2);
+    transform: translateX(4px);
+  }
 `;
 
 const ContactInfo = styled.div`
   flex: 1;
   
   .name {
-    color: ${({ theme }) => theme.colors.text.primary};
-    font-weight: 500;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+    font-size: 14px;
     margin-bottom: 2px;
   }
   
   .phone {
-    color: ${({ theme }) => theme.colors.text.secondary};
-    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    font-family: 'SF Mono', 'Monaco', monospace;
   }
   
   .relationship {
-    color: ${({ theme }) => theme.colors.text.caption};
-    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 11px;
     text-transform: capitalize;
+    margin-top: 2px;
   }
 `;
 
-const QuickCallButton = styled(Button)`
-  margin-left: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => theme.spacing.sm};
-  min-width: auto;
-`;
-
-const StatusMessage = styled.div<{ type: 'info' | 'success' | 'warning' | 'error' }>`
-  padding: ${({ theme }) => theme.spacing.md};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  margin: ${({ theme }) => theme.spacing.md} 0;
+const CallButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
   
-  background: ${({ theme, type }) => 
-    type === 'success' ? theme.colors.success[100] :
-    type === 'warning' ? theme.colors.warning[100] :
-    type === 'error' ? theme.colors.danger[100] :
-    theme.colors.surface.panel
-  };
+  &:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.2));
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  }
   
-  color: ${({ theme, type }) => 
-    type === 'success' ? theme.colors.success[700] :
-    type === 'warning' ? theme.colors.warning[700] :
-    type === 'error' ? theme.colors.danger[700] :
-    theme.colors.text.secondary
-  };
-  
-  border: 1px solid ${({ theme, type }) => 
-    type === 'success' ? theme.colors.success[300] :
-    type === 'warning' ? theme.colors.warning[300] :
-    type === 'error' ? theme.colors.danger[300] :
-    theme.colors.surface.border
-  };
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
 // Emergency Response Panel Component
@@ -537,12 +680,15 @@ This is an automated emergency alert. Please respond immediately.`;
 
   return (
     <EmergencyContainer>
-      <EmergencySection>
-        <h2 style={{ textAlign: 'center', marginBottom: '24px', color: '#F7F7FA' }}>
-          🚨 Emergency Response
-        </h2>
-        
-        {/* Enhanced SOS Button */}
+      <Header>
+        <Title>🚨 Emergency Response</Title>
+        <LiveBadge $active={!sosState.isActive}>
+          {sosState.isActive ? 'SOS ACTIVE' : 'READY'}
+        </LiveBadge>
+      </Header>
+      
+      {/* Enhanced SOS Button */}
+      <SOSSection>
         <SOSButton 
           isActive={sosState.isActive}
           onClick={sosState.isActive ? cancelSOS : startSOS}
@@ -571,43 +717,40 @@ This is an automated emergency alert. Please respond immediately.`;
           )}
         </SOSButton>
         
-        <p style={{ textAlign: 'center', color: '#D0CFD5', fontSize: '0.9rem', marginBottom: '24px' }}>
+        <SOSDescription>
           {sosState.isActive 
-            ? `⏱️ Emergency alert in ${sosState.countdown}s - Click to cancel`
+            ? `⏱️ Emergency alert in ${sosState.countdown}s — Click to cancel`
             : '🆘 Click to start SOS countdown • Double-click for immediate SOS'
           }
-        </p>
-        
-        {status && (
-          <StatusMessage type={status.type}>
-            {status.message}
-          </StatusMessage>
-        )}
-      </EmergencySection>
+        </SOSDescription>
+      </SOSSection>
+      
+      {status && (
+        <StatusMessage type={status.type}>
+          {status.message}
+        </StatusMessage>
+      )}
 
       {/* Emergency Contacts */}
-      <EmergencySection>
-        <h3>📞 Emergency Contacts</h3>
-        <ContactsList>
+      <Section>
+        <SectionTitle>📞 Emergency Contacts</SectionTitle>
+        <ContactsGrid>
           {emergencyContacts.map(contact => (
-            <ContactItem key={contact.id}>
+            <ContactCard key={contact.id}>
               <ContactInfo>
                 <div className="name">{contact.name}</div>
                 <div className="phone">{contact.phone}</div>
                 <div className="relationship">{contact.relationship.replace('-', ' ')}</div>
               </ContactInfo>
-              <QuickCallButton
-                variant="primary"
+              <CallButton
                 onClick={() => makeCall(contact.phone, contact.name)}
               >
                 📞 Call
-              </QuickCallButton>
-            </ContactItem>
+              </CallButton>
+            </ContactCard>
           ))}
-        </ContactsList>
-      </EmergencySection>
-
-      {/* Medical Information section removed as requested */}
+        </ContactsGrid>
+      </Section>
     </EmergencyContainer>
   );
 };

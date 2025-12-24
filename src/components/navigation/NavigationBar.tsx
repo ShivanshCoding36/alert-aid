@@ -72,7 +72,7 @@ const Brand = styled.div`
   }
 `;
 
-const NavigationItems = styled.div<{ isOpen: boolean }>`
+const NavigationItems = styled.div<{ $isOpen: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -87,14 +87,14 @@ const NavigationItems = styled.div<{ isOpen: boolean }>`
     flex-direction: column;
     padding: 16px 24px;
     gap: 12px;
-    transform: translateY(${({ isOpen }) => isOpen ? '0' : '-100%'});
-    opacity: ${({ isOpen }) => isOpen ? '1' : '0'};
-    visibility: ${({ isOpen }) => isOpen ? 'visible' : 'hidden'};
+    transform: translateY(${({ $isOpen }) => $isOpen ? '0' : '-100%'});
+    opacity: ${({ $isOpen }) => $isOpen ? '1' : '0'};
+    visibility: ${({ $isOpen }) => $isOpen ? 'visible' : 'hidden'};
     transition: all ${productionAnimations.duration.normal} ${productionAnimations.easing.smooth};
   }
 `;
 
-const NavItem = styled.button<{ isActive?: boolean }>`
+const NavItem = styled.button<{ $isActive?: boolean }>`
   display: flex;
   align-items: center;
   gap: 6px;
@@ -111,39 +111,39 @@ const NavItem = styled.button<{ isActive?: boolean }>`
   overflow: hidden;
   
   /* Aesthetic gradient background for active state */
-  background: ${({ isActive }) => 
-    isActive 
+  background: ${({ $isActive }) => 
+    $isActive 
       ? `linear-gradient(135deg, ${productionColors.brand.primary} 0%, ${productionColors.brand.secondary} 100%)`
       : 'transparent'
   };
-  color: ${({ isActive }) => 
-    isActive 
+  color: ${({ $isActive }) => 
+    $isActive 
       ? 'white' 
       : productionColors.text.secondary
   };
   
   /* Subtle glow effect for active button */
-  box-shadow: ${({ isActive }) => 
-    isActive 
+  box-shadow: ${({ $isActive }) => 
+    $isActive 
       ? '0 4px 12px rgba(239, 68, 68, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
       : 'none'
   };
   
   /* Hover effect with smooth transform */
   &:hover {
-    background: ${({ isActive }) => 
-      isActive 
+    background: ${({ $isActive }) => 
+      $isActive 
         ? `linear-gradient(135deg, ${productionColors.brand.secondary} 0%, ${productionColors.brand.dark} 100%)`
         : `rgba(239, 68, 68, 0.08)`
     };
-    color: ${({ isActive }) => 
-      isActive 
+    color: ${({ $isActive }) => 
+      $isActive 
         ? 'white' 
         : productionColors.text.primary
     };
     transform: translateY(-2px);
-    box-shadow: ${({ isActive }) => 
-      isActive 
+    box-shadow: ${({ $isActive }) => 
+      $isActive 
         ? '0 6px 16px rgba(239, 68, 68, 0.4)'
         : '0 2px 8px rgba(0, 0, 0, 0.1)'
     };
@@ -228,7 +228,7 @@ const LocationText = styled.span`
   }
 `;
 
-const RefreshButton = styled.button<{ isLoading?: boolean }>`
+const RefreshButton = styled.button<{ $isLoading?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -256,8 +256,8 @@ const RefreshButton = styled.button<{ isLoading?: boolean }>`
   svg {
     width: 14px;
     height: 14px;
-    animation: ${({ isLoading }) => 
-      isLoading ? 'spin 1s linear infinite' : 'none'
+    animation: ${({ $isLoading }) => 
+      $isLoading ? 'spin 1s linear infinite' : 'none'
     };
   }
 `;
@@ -388,7 +388,7 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
         <span>Alert Aid</span>
       </Brand>
 
-      <NavigationItems isOpen={isMobileMenuOpen}>
+      <NavigationItems $isOpen={isMobileMenuOpen}>
         <StatusBadgeContainer>
           <LiveStatusBadge isLive={isLive} />
           <GPSStatusBadge enabled={isGPSEnabled} />
@@ -406,7 +406,7 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
           </RefreshButton>
           <RefreshButton 
             onClick={refreshLocation}
-            isLoading={locationState.loading}
+            $isLoading={locationState.loading}
             title="Refresh location"
           >
             <RefreshCw />
@@ -416,7 +416,7 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
         {navigationItems.map(({ id, label, icon: Icon }) => (
           <NavItem
             key={id}
-            isActive={currentPage === id}
+            $isActive={currentPage === id}
             onClick={() => handleNavigation(id)}
           >
             <Icon />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { useAuth, RegisterData } from '../../contexts/AuthContext';
 import { X, Mail, Lock, User, Phone, Heart, AlertCircle, Check } from 'lucide-react';
 import { buttonInteraction, inputInteraction, fadeInScale, slideInUp } from '../../styles/microinteractions';
@@ -30,7 +30,7 @@ const Backdrop = styled.div`
   align-items: center;
   justify-content: center;
   padding: 20px;
-  animation: ${modalBackdropFade} 0.3s ease-out;
+  ${css`animation: ${modalBackdropFade} 0.3s ease-out;`}
 `;
 
 const Modal = styled.div`
@@ -42,7 +42,7 @@ const Modal = styled.div`
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  animation: ${fadeInScale} 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  ${css`animation: ${fadeInScale} 0.4s cubic-bezier(0.4, 0, 0.2, 1);`}
   position: relative;
 `;
 
@@ -83,14 +83,14 @@ const Title = styled.h2`
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 8px;
-  animation: ${slideInUp} 0.5s ease-out;
+  ${css`animation: ${slideInUp} 0.5s ease-out;`}
 `;
 
 const Subtitle = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 14px;
   margin-bottom: 32px;
-  animation: ${slideInUp} 0.6s ease-out;
+  ${css`animation: ${slideInUp} 0.6s ease-out;`}
 `;
 
 const Form = styled.form`
@@ -125,7 +125,7 @@ const Tab = styled.button<{ active: boolean }>`
 
 const InputGroup = styled.div`
   margin-bottom: 16px;
-  animation: ${slideInUp} 0.7s ease-out;
+  ${css`animation: ${slideInUp} 0.7s ease-out;`}
 `;
 
 const Label = styled.label`
@@ -168,7 +168,7 @@ const Input = styled.input<{ hasError?: boolean }>`
     color: ${({ theme }) => theme.colors.text.placeholder};
   }
   
-  ${({ hasError }) => hasError && `
+  ${({ hasError }) => hasError && css`
     animation: ${shake} 0.5s ease;
   `}
 `;
@@ -255,7 +255,7 @@ const ErrorMessage = styled.div`
   color: ${({ theme }) => theme.colors.danger[500]};
   font-size: 12px;
   margin-top: 6px;
-  animation: ${slideInUp} 0.3s ease-out;
+  ${css`animation: ${slideInUp} 0.3s ease-out;`}
   
   svg {
     width: 14px;
@@ -294,7 +294,7 @@ const SuccessMessage = styled.div`
   font-size: 14px;
   font-weight: 600;
   margin-top: 16px;
-  animation: ${slideInUp} 0.4s ease-out;
+  ${css`animation: ${slideInUp} 0.4s ease-out;`}
   
   svg {
     width: 18px;

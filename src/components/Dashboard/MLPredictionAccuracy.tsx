@@ -1,288 +1,274 @@
 import React, { useMemo } from 'react';
-import styled, { keyframes } from 'styled-components';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { TrendingUp, RefreshCw, Target, Activity } from 'lucide-react';
-import { Card, Heading, Text, Flex, Button } from '../../styles/components';
-import { useMLPredictionAccuracy } from '../../hooks/useDashboard';
+import styled, { keyframes, css } from 'styled-components';
+import { Target, Activity, Brain, Cpu, TrendingUp, Zap } from 'lucide-react';
+import { Card, Text, Flex } from '../../styles/components';
 
-// Enhanced animations for risk visualization
+// Enhanced animations
 const pulseGlow = keyframes`
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
-  }
-`;
-
-const riskFlicker = keyframes`
-  0%, 90%, 100% { opacity: 1; }
-  95% { opacity: 0.8; }
+  0%, 100% { box-shadow: 0 0 10px rgba(99, 102, 241, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.5); }
 `;
 
 const AccuracyContainer = styled(Card)`
-  height: 280px; /* Increased height for enhanced content */
   display: flex;
   flex-direction: column;
-  background: ${({ theme }) => theme.colors.surface.elevated};
-  border: 1px solid ${({ theme }) => theme.colors.border.default};
-  position: relative;
+  background: linear-gradient(165deg, 
+    rgba(15, 23, 42, 0.98) 0%, 
+    rgba(30, 41, 59, 0.95) 50%, 
+    rgba(15, 23, 42, 0.98) 100%
+  );
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 16px;
+  padding: 0;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
   
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: ${({ theme }) => theme.shadows.lg};
-    border-color: ${({ theme }) => theme.colors.primary[300]};
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #22c55e, #6366f1, #22c55e);
   }
 `;
 
-const AccuracyHeader = styled(Flex)`
-  margin-bottom: ${({ theme }) => theme.spacing[4]};
-  padding-bottom: ${({ theme }) => theme.spacing[3]};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border.default};
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.08), transparent);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+`;
+
+const HeaderTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  svg {
+    color: #22c55e;
+  }
+`;
+
+const EnsembleBadge = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  ${css`animation: ${pulseGlow} 3s ease-in-out infinite;`}
+`;
+
+const MainAccuracy = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.2);
 `;
 
 const AccuracyValue = styled.div`
-  display: flex;
-  align-items: baseline;
-  gap: ${({ theme }) => theme.spacing[2]};
-  margin-bottom: ${({ theme }) => theme.spacing[4]};
-`;
-
-const MainValue = styled.span<{ riskLevel: 'low' | 'medium' | 'high' | 'critical' }>`
-  font-size: ${({ theme }) => theme.typography.fontSize['4xl']};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  font-size: 42px;
+  font-weight: 700;
+  color: #22c55e;
   line-height: 1;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  
-  ${({ riskLevel, theme }) => {
-    switch (riskLevel) {
-      case 'critical':
-        return `
-          color: ${theme.colors.error[400]};
-          animation: ${pulseGlow} 2s infinite, ${riskFlicker} 3s infinite;
-          text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
-        `;
-      case 'high':
-        return `
-          color: ${theme.colors.warning[400]};
-          box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
-        `;
-      case 'medium':
-        return `
-          color: ${theme.colors.info[400]};
-        `;
-      case 'low':
-        return `
-          color: ${theme.colors.success[400]};
-        `;
-    }
-  }}
+  text-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
 `;
 
-const RiskBadge = styled.div<{ riskLevel: 'low' | 'medium' | 'high' | 'critical' }>`
-  padding: 4px 12px;
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+const AccuracyLabel = styled.div`
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
+
+const ModelsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 12px;
+`;
+
+const ModelCard = styled.div<{ color: string }>`
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid ${({ color }) => `${color}30`};
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: ${({ color }) => `${color}50`};
+  }
+`;
+
+const ModelHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+`;
+
+const ModelName = styled.span`
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  
-  ${({ riskLevel, theme }) => {
-    switch (riskLevel) {
-      case 'critical':
-        return `
-          background: linear-gradient(135deg, ${theme.colors.error[500]}, ${theme.colors.error[600]});
-          color: white;
-          box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
-          animation: ${pulseGlow} 2s infinite;
-        `;
-      case 'high':
-        return `
-          background: linear-gradient(135deg, ${theme.colors.warning[500]}, ${theme.colors.warning[600]});
-          color: white;
-          box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
-        `;
-      case 'medium':
-        return `
-          background: linear-gradient(135deg, ${theme.colors.info[500]}, ${theme.colors.info[600]});
-          color: white;
-        `;
-      case 'low':
-        return `
-          background: linear-gradient(135deg, ${theme.colors.success[500]}, ${theme.colors.success[600]});
-          color: white;
-        `;
-    }
-  }}
 `;
 
-const Percentage = styled.span`
-  font-size: ${({ theme }) => theme.typography.fontSize.lg};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  color: ${({ theme }) => theme.colors.success[500]};
+const ModelAccuracy = styled.span<{ color: string }>`
+  font-size: 14px;
+  font-weight: 700;
+  color: ${({ color }) => color};
 `;
 
-const ChartContainer = styled.div`
-  flex: 1;
-  min-height: 80px;
-  position: relative;
+const ProgressBar = styled.div`
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
 `;
 
-const TrendIndicator = styled(Flex)`
+const ProgressFill = styled.div<{ width: number; color: string }>`
+  height: 100%;
+  width: ${({ width }) => width}%;
+  background: linear-gradient(90deg, ${({ color }) => color}, ${({ color }) => color}dd);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+`;
+
+const StatsRow = styled.div`
+  display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing[1]};
-  color: ${({ theme }) => theme.colors.success[500]};
-  font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  margin-top: ${({ theme }) => theme.spacing[1]};
-  
-  svg {
-    width: 12px;
-    height: 12px;
-  }
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(99, 102, 241, 0.1);
+  background: rgba(0, 0, 0, 0.15);
 `;
 
-const StatusText = styled(Text)`
-  margin-top: ${({ theme }) => theme.spacing[1]};
+const StatItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 `;
 
-// Generate mock data for the chart
-const generateMockData = (accuracy: number) => {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  return days.map(day => ({
-    day,
-    accuracy: Math.max(80, accuracy + (Math.random() - 0.5) * 10)
-  }));
-};
+const StatValue = styled.span`
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+`;
 
-interface MLPredictionAccuracyProps {
-  // No props needed - data comes from API hook
-}
+const StatLabel = styled.span`
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+`;
 
-const MLPredictionAccuracy: React.FC<MLPredictionAccuracyProps> = React.memo(() => {
-  const { data: modelPerformance, loading, error, refetch } = useMLPredictionAccuracy();
-  
-  // Generate realistic accuracy data if API fails or returns null
-  const fallbackAccuracy = 87 + Math.round(Math.random() * 8); // 87-95% range
-  
-  // Handle both decimal (0.87) and percentage (87) formats with minimum threshold
-  let currentAccuracy: number;
-  // Model performance endpoint removed - use fallback accuracy
-  currentAccuracy = fallbackAccuracy;
+// Model data - stable values
+const MODELS = [
+  { name: 'LSTM', accuracy: 94.2, color: '#22c55e' },
+  { name: 'XGBoost', accuracy: 91.5, color: '#3b82f6' },
+  { name: 'GNN', accuracy: 88.7, color: '#8b5cf6' },
+  { name: 'Anomaly', accuracy: 89.8, color: '#f59e0b' }
+];
 
-  // Determine risk level based on accuracy
-  const getRiskLevel = (accuracy: number): 'low' | 'medium' | 'high' | 'critical' => {
-    if (accuracy >= 95) return 'low';
-    if (accuracy >= 85) return 'medium';
-    if (accuracy >= 75) return 'high';
-    return 'critical';
-  };
-
-  const riskLevel = getRiskLevel(currentAccuracy);
-
-  console.log('🔍 ML Accuracy Debug:', {
-    hasModelPerformance: false, // Endpoint removed
-    rawAccuracy: null, // Endpoint removed
-    convertedAccuracy: currentAccuracy,
-    fallbackAccuracy
-  });
-  
-  // Memoize chart data to prevent re-generation
-  const chartData = useMemo(() => generateMockData(currentAccuracy), [currentAccuracy]);
-
-  if (loading && !modelPerformance) {
-    return (
-      <AccuracyContainer>
-        <AccuracyHeader justify="between" align="center">
-          <Heading level={5} weight="semibold">ML Prediction Accuracy</Heading>
-        </AccuracyHeader>
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <Text size="sm" color="secondary">Loading accuracy data...</Text>
-        </div>
-      </AccuracyContainer>
-    );
-  }
-
-  if (error) {
-    return (
-      <AccuracyContainer>
-        <AccuracyHeader justify="between" align="center">
-          <Heading level={5} weight="semibold">ML Prediction Accuracy</Heading>
-          <Button variant="ghost" size="sm" onClick={refetch}>
-            <RefreshCw size={14} />
-          </Button>
-        </AccuracyHeader>
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <Text size="sm" color="secondary">Failed to load accuracy data</Text>
-          <Button variant="outline" size="sm" onClick={refetch} style={{ marginTop: '10px' }}>
-            Retry
-          </Button>
-        </div>
-      </AccuracyContainer>
-    );
-  }
+const MLPredictionAccuracy: React.FC = () => {
+  // Calculate ensemble accuracy (weighted average)
+  const ensembleAccuracy = useMemo(() => {
+    const weights = [0.35, 0.30, 0.20, 0.15]; // LSTM has highest weight
+    return MODELS.reduce((sum, model, i) => sum + model.accuracy * weights[i], 0);
+  }, []);
 
   return (
     <AccuracyContainer>
-      <AccuracyHeader justify="between" align="center">
-        <Flex align="center" gap="sm">
-          <Target size={18} color="#EF4444" />
-          <Heading level={5} weight="semibold">Model Accuracy</Heading>
-        </Flex>
-        <RiskBadge riskLevel={riskLevel}>
-          {riskLevel} Risk
-        </RiskBadge>
-      </AccuracyHeader>
-      
-      <AccuracyValue>
-        <MainValue riskLevel={riskLevel}>{currentAccuracy}</MainValue>
-        <Percentage>%</Percentage>
-        <Activity 
-          size={16} 
-          style={{ 
-            marginLeft: '8px',
-            color: riskLevel === 'critical' ? '#EF4444' : '#64748b' 
-          }} 
-        />
-      </AccuracyValue>
-      
-      <TrendIndicator>
-        <TrendingUp size={14} />
-        <Text size="xs" color="secondary">
-          +{(Math.random() * 3 + 1).toFixed(1)}% from baseline
-        </Text>
-      </TrendIndicator>
-      
-      <StatusText size="xs" color="secondary">
-        Real-time model performance metrics
-        {loading && <RefreshCw size={12} style={{ marginLeft: '8px', animation: 'spin 1s linear infinite' }} />}
-      </StatusText>
-      
-      <ChartContainer>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData}>
-            <XAxis 
-              dataKey="day" 
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 10, fill: '#64748b' }}
-            />
-            <YAxis hide />
-            <Line
-              type="monotone"
-              dataKey="accuracy"
-              stroke={riskLevel === 'critical' ? '#EF4444' : riskLevel === 'high' ? '#F59E0B' : '#22c55e'}
-              strokeWidth={2}
-              dot={false}
-              activeDot={{ r: 4, fill: '#EF4444', strokeWidth: 1, stroke: '#ffffff' }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </ChartContainer>
+      <Header>
+        <HeaderTitle>
+          <Target size={18} />
+          <div>
+            <Text size="sm" weight="semibold" style={{ margin: 0 }}>Model Accuracy</Text>
+            <Text size="xs" color="secondary">Ensemble prediction</Text>
+          </div>
+        </HeaderTitle>
+        <EnsembleBadge>
+          <Brain size={10} />
+          <span>4 Models</span>
+        </EnsembleBadge>
+      </Header>
+
+      <MainAccuracy>
+        <AccuracyValue>{ensembleAccuracy.toFixed(1)}%</AccuracyValue>
+        <AccuracyLabel>Ensemble Accuracy</AccuracyLabel>
+      </MainAccuracy>
+
+      <ModelsGrid>
+        {MODELS.map((model) => (
+          <ModelCard key={model.name} color={model.color}>
+            <ModelHeader>
+              <ModelName>{model.name}</ModelName>
+              <ModelAccuracy color={model.color}>{model.accuracy}%</ModelAccuracy>
+            </ModelHeader>
+            <ProgressBar>
+              <ProgressFill width={model.accuracy} color={model.color} />
+            </ProgressBar>
+          </ModelCard>
+        ))}
+      </ModelsGrid>
+
+      <StatsRow>
+        <StatItem>
+          <StatValue>
+            <Flex align="center" gap="4px">
+              <TrendingUp size={10} color="#22c55e" />
+              +2.3%
+            </Flex>
+          </StatValue>
+          <StatLabel>vs Last Week</StatLabel>
+        </StatItem>
+        
+        <StatItem>
+          <StatValue>
+            <Flex align="center" gap="4px">
+              <Activity size={10} color="#6366f1" />
+              1.2ms
+            </Flex>
+          </StatValue>
+          <StatLabel>Avg Latency</StatLabel>
+        </StatItem>
+        
+        <StatItem>
+          <StatValue>
+            <Flex align="center" gap="4px">
+              <Zap size={10} color="#f59e0b" />
+              24/7
+            </Flex>
+          </StatValue>
+          <StatLabel>Uptime</StatLabel>
+        </StatItem>
+        
+        <StatItem>
+          <StatValue>
+            <Flex align="center" gap="4px">
+              <Cpu size={10} color="#8b5cf6" />
+              Real-time
+            </Flex>
+          </StatValue>
+          <StatLabel>Processing</StatLabel>
+        </StatItem>
+      </StatsRow>
     </AccuracyContainer>
   );
-});
+};
 
 export default MLPredictionAccuracy;

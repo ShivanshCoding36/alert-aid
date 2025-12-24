@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { MapPin, AlertTriangle, Search, Loader } from 'lucide-react';
 import LocationResolver from '../../services/locationResolver';
 
@@ -51,7 +51,7 @@ const ModalContent = styled.div`
   box-shadow: 0 32px 64px rgba(0, 0, 0, 0.30), 0 16px 32px rgba(0, 0, 0, 0.15);
   border: 1px solid ${({ theme }) => theme.colors.border.default};
   
-  animation: ${slideUpFadeIn} 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  ${css`animation: ${slideUpFadeIn} 0.4s cubic-bezier(0.4, 0, 0.2, 1);`}
   position: relative;
   
   @media (max-width: 480px) {
@@ -76,7 +76,7 @@ const IconContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin: 0 auto 24px auto;
-  animation: ${pulseGlow} 2s ease-in-out infinite;
+  ${css`animation: ${pulseGlow} 2s ease-in-out infinite;`}
   
   svg {
     width: 36px;

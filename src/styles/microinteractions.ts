@@ -201,7 +201,7 @@ export const buttonInteraction = css`
 // Card Hover/Mount Animation
 export const cardInteraction = css`
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: ${fadeInScale} 0.4s ease-out;
+  ${css`animation: ${fadeInScale} 0.4s ease-out;`}
   
   &:hover {
     transform: translateY(-4px);
@@ -245,7 +245,7 @@ export const liveIndicator = css`
     height: 8px;
     border-radius: 50%;
     background: ${({ theme }) => theme.colors.primary[500]};
-    animation: ${pulseDot} 2s ease-in-out infinite;
+    ${css`animation: ${pulseDot} 2s ease-in-out infinite;`}
   }
 `;
 
@@ -256,7 +256,7 @@ export const gradientText = css`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: ${gradientShift} 4s ease-in-out infinite;
+  ${css`animation: ${gradientShift} 4s ease-in-out infinite;`}
 `;
 
 // Skeleton Loading Animation
@@ -268,17 +268,17 @@ export const skeletonLoading = css`
     ${({ theme }) => theme.colors.surface.default} 100%
   );
   background-size: 2000px 100%;
-  animation: ${shimmer} 2s infinite linear;
+  ${css`animation: ${shimmer} 2s infinite linear;`}
 `;
 
 // Toast/Notification Slide In
 export const toastSlideIn = css`
-  animation: ${slideInRight} 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  ${css`animation: ${slideInRight} 0.4s cubic-bezier(0.4, 0, 0.2, 1);`}
 `;
 
 // Modal/Dialog Fade In
 export const modalFadeIn = css`
-  animation: ${fadeInScale} 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  ${css`animation: ${fadeInScale} 0.3s cubic-bezier(0.4, 0, 0.2, 1);`}
 `;
 
 // Checkmark Success Animation
@@ -343,7 +343,7 @@ export const statusBadgePulse = css<{ status?: 'success' | 'warning' | 'danger' 
         default: return theme.colors.primary[500];
       }
     }};
-    animation: ${pulseDot} 2s ease-in-out infinite;
+    ${css`animation: ${pulseDot} 2s ease-in-out infinite;`}
   }
 `;
 
@@ -353,7 +353,7 @@ export const headingGlow = css`
     0 0 10px rgba(239, 68, 68, 0.3),
     0 0 20px rgba(239, 68, 68, 0.2),
     0 0 30px rgba(239, 68, 68, 0.1);
-  animation: ${glow} 3s ease-in-out infinite;
+  ${css`animation: ${glow} 3s ease-in-out infinite;`}
 `;
 
 // Link Hover Underline

@@ -140,6 +140,7 @@ class WeatherForecastService {
       precipitation: day.precipitation,
       temperature: day.temperature,
       windSpeed: day.wind_speed,
+      conditions: day.conditions,  // Include weather conditions for icons
     }));
   }
 }

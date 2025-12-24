@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { productionColors } from '../../styles/production-ui-system';
 
 // Shimmer animation
@@ -21,7 +21,7 @@ const SkeletonBase = styled.div`
     ${productionColors.background.secondary} 100%
   );
   background-size: 1000px 100%;
-  animation: ${shimmer} 2s infinite linear;
+  ${css`animation: ${shimmer} 2s infinite linear;`}
   border-radius: 8px;
 `;
 

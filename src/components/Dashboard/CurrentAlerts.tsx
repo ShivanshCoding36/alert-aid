@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { AlertTriangle, Clock, RefreshCw } from 'lucide-react';
+import { AlertTriangle, Clock, RefreshCw, ExternalLink } from 'lucide-react';
 import { Card, Heading, Text, StatusIndicator, Flex, Button } from '../../styles/components';
 import { useCurrentAlerts } from '../../hooks/useDashboard';
 import { useNotifications } from '../../contexts/NotificationContext';
@@ -126,12 +126,12 @@ const TimeStamp = styled.div`
 `;
 
 interface CurrentAlertsProps {
-  // No props needed - data comes from API hook
+  onEmergencyClick?: () => void;
 }
 
 
 
-const CurrentAlerts: React.FC<CurrentAlertsProps> = () => {
+const CurrentAlerts: React.FC<CurrentAlertsProps> = ({ onEmergencyClick }) => {
   const { data: alertsData, loading, error, refetch } = useCurrentAlerts();
   const { addNotification } = useNotifications();
 
@@ -246,7 +246,12 @@ const CurrentAlerts: React.FC<CurrentAlertsProps> = () => {
       <div>
         {displayAlerts && displayAlerts.length > 0 ? (
           displayAlerts.slice(0, 5).map((alert) => (
-            <AlertItem key={alert.id} severity={alert.severity}>
+            <AlertItem 
+              key={alert.id} 
+              severity={alert.severity}
+              onClick={onEmergencyClick}
+              style={{ cursor: onEmergencyClick ? 'pointer' : 'default' }}
+            >
               <AlertIcon severity={alert.severity}>
                 <AlertTriangle />
               </AlertIcon>
@@ -263,6 +268,9 @@ const CurrentAlerts: React.FC<CurrentAlertsProps> = () => {
                   </TimeStamp>
                 </AlertMeta>
               </AlertContent>
+              {onEmergencyClick && (
+                <ExternalLink size={14} style={{ color: 'rgba(255,255,255,0.4)', flexShrink: 0 }} />
+              )}
             </AlertItem>
           ))
         ) : (

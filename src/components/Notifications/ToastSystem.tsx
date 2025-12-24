@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { CheckCircle, AlertTriangle, XCircle, Info, X } from 'lucide-react';
 
 // Toast Types
@@ -64,7 +64,7 @@ const ToastCard = styled.div<{ type: ToastType; isExiting: boolean }>`
   padding: 16px;
   box-shadow: ${({ theme }) => theme.shadows.lg};
   min-width: 320px;
-  animation: ${({ isExiting }) => isExiting ? slideOutToRight : slideInFromRight} 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  ${({ isExiting }) => isExiting ? css`animation: ${slideOutToRight} 0.3s cubic-bezier(0.4, 0, 0.2, 1);` : css`animation: ${slideInFromRight} 0.3s cubic-bezier(0.4, 0, 0.2, 1);`}
   display: flex;
   align-items: flex-start;
   gap: 12px;

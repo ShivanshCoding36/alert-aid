@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 // Production-quality color palette
 const colors = {
@@ -113,11 +113,11 @@ export const Card = styled.div<{
   backdrop-filter: blur(12px);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   
-  ${props => props.animate && `
+  ${props => props.animate && css`
     animation: ${slideUp} 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   `}
   
-  ${props => props.glow && `
+  ${props => props.glow && css`
     animation: ${glow} 3s ease-in-out infinite;
   `}
   

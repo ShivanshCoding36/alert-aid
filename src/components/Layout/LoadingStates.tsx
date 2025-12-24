@@ -38,7 +38,7 @@ const SkeletonBase = styled.div<{ width?: string; height?: string; borderRadius?
     ${({ theme }) => theme.colors.surface.default} 100%
   );
   background-size: 200px 100%;
-  animation: ${shimmer} 1.5s ease-in-out infinite;
+  ${css`animation: ${shimmer} 1.5s ease-in-out infinite;`}
   border-radius: ${({ borderRadius, theme }) => borderRadius || theme.borderRadius.md};
   width: ${({ width }) => width || '100%'};
   height: ${({ height }) => height || '1rem'};
@@ -83,7 +83,7 @@ const PulseDot = styled.div<{ delay?: number }>`
   height: 0.75rem;
   border-radius: 50%;
   background: ${({ theme }) => theme.colors.primary[500]};
-  animation: ${pulse} 1.5s ease-in-out infinite;
+  ${css`animation: ${pulse} 1.5s ease-in-out infinite;`}
   animation-delay: ${({ delay }) => delay || 0}s;
 `;
 
@@ -108,7 +108,7 @@ const WaveBar = styled.div<{ delay?: number }>`
   height: 2rem;
   background: ${({ theme }) => theme.colors.primary[500]};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  animation: ${wave} 1.2s ease-in-out infinite;
+  ${css`animation: ${wave} 1.2s ease-in-out infinite;`}
   animation-delay: ${({ delay }) => delay || 0}s;
 `;
 
@@ -143,7 +143,7 @@ const SpinnerContainer = styled.div<{ size?: 'sm' | 'md' | 'lg' }>`
   border: 2px solid ${({ theme }) => theme.colors.surface.border};
   border-left: 2px solid ${({ theme }) => theme.colors.primary[500]};
   border-radius: 50%;
-  animation: ${spin} 1s linear infinite;
+  ${css`animation: ${spin} 1s linear infinite;`}
 `;
 
 export const Spinner: React.FC<{ size?: 'sm' | 'md' | 'lg' }> = ({ size = 'md' }) => (

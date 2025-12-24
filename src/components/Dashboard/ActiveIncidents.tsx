@@ -25,14 +25,14 @@ const IncidentsList = styled.div`
   gap: ${({ theme }) => theme.spacing[3]};
 `;
 
-const IncidentItem = styled.div<{ riskLevel: string }>`
+const IncidentItem = styled.div<{ $riskLevel: string }>`
   display: flex;
   align-items: flex-start;
   gap: ${({ theme }) => theme.spacing[3]};
   padding: ${({ theme }) => theme.spacing[3]};
   border-radius: ${({ theme }) => theme.borderRadius.default};
-  background: ${({ riskLevel, theme }) => {
-    switch (riskLevel) {
+  background: ${({ $riskLevel, theme }) => {
+    switch ($riskLevel) {
       case 'HIGH':
         return theme.colors.danger[50];
       case 'MEDIUM':
@@ -41,8 +41,8 @@ const IncidentItem = styled.div<{ riskLevel: string }>`
         return '#f0f9ff';
     }
   }};
-  border: 1px solid ${({ riskLevel, theme }) => {
-    switch (riskLevel) {
+  border: 1px solid ${({ $riskLevel, theme }) => {
+    switch ($riskLevel) {
       case 'HIGH':
         return theme.colors.danger[500];
       case 'MEDIUM':
@@ -51,8 +51,8 @@ const IncidentItem = styled.div<{ riskLevel: string }>`
         return '#3b82f6';
     }
   }};
-  border-left: 3px solid ${({ riskLevel, theme }) => {
-    switch (riskLevel) {
+  border-left: 3px solid ${({ $riskLevel, theme }) => {
+    switch ($riskLevel) {
       case 'HIGH':
         return theme.colors.danger[500];
       case 'MEDIUM':
@@ -64,8 +64,8 @@ const IncidentItem = styled.div<{ riskLevel: string }>`
   transition: ${({ theme }) => theme.transitions.normal};
   
   &:hover {
-    background: ${({ riskLevel, theme }) => {
-      switch (riskLevel) {
+    background: ${({ $riskLevel, theme }) => {
+      switch ($riskLevel) {
         case 'HIGH':
           return theme.colors.danger[50];
         case 'MEDIUM':
@@ -143,13 +143,13 @@ const IncidentMeta = styled(Flex)`
   margin-top: ${({ theme }) => theme.spacing.xs};
 `;
 
-const StatusBadge = styled.div<{ status: string }>`
+const StatusBadge = styled.div<{ $status: string }>`
   padding: 2px 6px;
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  background: ${({ status, theme }) => {
-    switch (status) {
+  background: ${({ $status, theme }) => {
+    switch ($status) {
       case 'Active':
         return theme.colors.danger + '30';
       case 'Monitoring':
@@ -158,8 +158,8 @@ const StatusBadge = styled.div<{ status: string }>`
         return theme.colors.success + '30';
     }
   }};
-  color: ${({ status, theme }) => {
-    switch (status) {
+  color: ${({ $status, theme }) => {
+    switch ($status) {
       case 'Active':
         return theme.colors.danger;
       case 'Monitoring':
@@ -173,13 +173,13 @@ const StatusBadge = styled.div<{ status: string }>`
   gap: 4px;
 `;
 
-const RiskBadge = styled.div<{ riskLevel: string }>`
+const RiskBadge = styled.div<{ $riskLevel: string }>`
   padding: 2px 6px;
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  background: ${({ riskLevel, theme }) => {
-    switch (riskLevel) {
+  background: ${({ $riskLevel, theme }) => {
+    switch ($riskLevel) {
       case 'HIGH':
         return theme.colors.danger;
       case 'MEDIUM':
@@ -277,7 +277,7 @@ const ActiveIncidents: React.FC<ActiveIncidentsProps> = ({
     }
   };
 
-  const activeIncidentsCount = incidents.filter(incident => incident.status === 'Active').length;
+  const activeIncidentsCount = (incidents || []).filter(incident => incident.status === 'Active').length;
 
   return (
     <IncidentsContainer>
@@ -293,8 +293,8 @@ const ActiveIncidents: React.FC<ActiveIncidentsProps> = ({
       </IncidentsHeader>
       
       <IncidentsList>
-        {incidents.slice(0, 5).map((incident) => (
-          <IncidentItem key={incident.id} riskLevel={incident.riskLevel}>
+        {(incidents || []).slice(0, 5).map((incident) => (
+          <IncidentItem key={incident.id} $riskLevel={incident.riskLevel}>
             <IncidentIcon type={incident.type}>
               {getTypeIcon(incident.type)}
             </IncidentIcon>
@@ -307,7 +307,7 @@ const ActiveIncidents: React.FC<ActiveIncidentsProps> = ({
                     <Text size="xs" color="secondary">{incident.location}</Text>
                   </Flex>
                 </div>
-                <RiskBadge riskLevel={incident.riskLevel}>
+                <RiskBadge $riskLevel={incident.riskLevel}>
                   {incident.riskLevel}
                 </RiskBadge>
               </IncidentHeader>
@@ -317,7 +317,7 @@ const ActiveIncidents: React.FC<ActiveIncidentsProps> = ({
               </Text>
               
               <IncidentMeta justify="between" align="center">
-                <StatusBadge status={incident.status}>
+                <StatusBadge $status={incident.status}>
                   <StatusIndicator 
                     status={getRiskStatus(incident.riskLevel)} 
                     size="sm" 

@@ -43,15 +43,15 @@ const RegionInfo = styled(Flex)`
   flex: 1;
 `;
 
-const RegionIcon = styled.div<{ riskLevel: string }>`
+const RegionIcon = styled.div<{ $riskLevel: string }>`
   width: 24px;
   height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${({ riskLevel, theme }) => {
-    switch (riskLevel) {
+  background: ${({ $riskLevel, theme }) => {
+    switch ($riskLevel) {
       case 'Critical':
         return `${theme.colors.danger[500]}20`;
       case 'High':
@@ -62,8 +62,8 @@ const RegionIcon = styled.div<{ riskLevel: string }>`
         return theme.colors.success[50];
     }
   }};
-  color: ${({ riskLevel, theme }) => {
-    switch (riskLevel) {
+  color: ${({ $riskLevel, theme }) => {
+    switch ($riskLevel) {
       case 'Critical':
         return theme.colors.danger[500];
       case 'High':
@@ -91,7 +91,7 @@ const RegionStats = styled(Flex)`
   gap: ${({ theme }) => theme.spacing[3]};
 `;
 
-const PercentageBar = styled.div<{ percentage: number; riskLevel: string }>`
+const PercentageBar = styled.div<{ $percentage: number; $riskLevel: string }>`
   width: 40px;
   height: 4px;
   background: ${({ theme }) => theme.colors.border.light};
@@ -105,9 +105,9 @@ const PercentageBar = styled.div<{ percentage: number; riskLevel: string }>`
     left: 0;
     top: 0;
     height: 100%;
-    width: ${({ percentage }) => percentage}%;
-    background: ${({ riskLevel, theme }) => {
-      switch (riskLevel) {
+    width: ${({ $percentage }) => $percentage}%;
+    background: ${({ $riskLevel, theme }) => {
+      switch ($riskLevel) {
         case 'Critical':
           return theme.colors.danger[500];
         case 'High':
@@ -189,10 +189,10 @@ const SeverityByRegion: React.FC<SeverityByRegionProps> = ({
       </SeverityHeader>
       
       <RegionList>
-        {regions.slice(0, 4).map((region, index) => (
+        {(regions || []).slice(0, 4).map((region, index) => (
           <RegionItem key={index}>
             <RegionInfo>
-              <RegionIcon riskLevel={region.riskLevel}>
+              <RegionIcon $riskLevel={region.riskLevel}>
                 <MapPin />
               </RegionIcon>
               <RegionDetails>
@@ -206,8 +206,8 @@ const SeverityByRegion: React.FC<SeverityByRegionProps> = ({
             
             <RegionStats>
               <PercentageBar 
-                percentage={region.percentage} 
-                riskLevel={region.riskLevel}
+                $percentage={region.percentage} 
+                $riskLevel={region.riskLevel}
               />
               <PercentageValue size="xs" weight="medium">
                 {region.percentage}%

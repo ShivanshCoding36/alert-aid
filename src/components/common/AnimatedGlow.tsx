@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { productionColors } from '../../styles/production-ui-system';
 
 /**
@@ -57,16 +57,11 @@ export const GlowWrapper = styled.div<{
   
   color: ${({ color }) => color || 'currentColor'};
   
-  animation: ${({ variant }) => {
-    if (variant === 'pulse') return pulseGlow;
-    if (variant === 'breathe') return breatheGlow;
-    if (variant === 'rainbow') return rainbowGlow;
-    return breatheGlow;
-  }} ${({ intensity }) => {
-    if (intensity === 'low') return '4s';
-    if (intensity === 'high') return '1.5s';
-    return '2.5s';
-  }} ease-in-out infinite;
+  ${({ variant, intensity }) => {
+    const anim = variant === 'pulse' ? pulseGlow : variant === 'rainbow' ? rainbowGlow : breatheGlow;
+    const dur = intensity === 'low' ? '4s' : intensity === 'high' ? '1.5s' : '2.5s';
+    return css`animation: ${anim} ${dur} ease-in-out infinite;`;
+  }}
 `;
 
 // Status indicator with glow
@@ -80,8 +75,9 @@ export const GlowingStatusDot = styled.div<{
   border-radius: 50%;
   background: ${({ color }) => color};
   
-  animation: ${({ variant }) => variant === 'pulse' ? pulseGlow : breatheGlow} 
-    2s ease-in-out infinite;
+  ${({ variant }) => variant === 'pulse' 
+    ? css`animation: ${pulseGlow} 2s ease-in-out infinite;` 
+    : css`animation: ${breatheGlow} 2s ease-in-out infinite;`}
   
   box-shadow: 
     0 0 8px ${({ color }) => color},
@@ -98,11 +94,10 @@ export const GlowingBorder = styled.div<{
   border-radius: 12px;
   padding: 16px;
   
-  animation: ${pulseGlow} ${({ intensity }) => {
-    if (intensity === 'low') return '4s';
-    if (intensity === 'high') return '1.5s';
-    return '2.5s';
-  }} ease-in-out infinite;
+  ${({ intensity }) => {
+    const dur = intensity === 'low' ? '4s' : intensity === 'high' ? '1.5s' : '2.5s';
+    return css`animation: ${pulseGlow} ${dur} ease-in-out infinite;`;
+  }}
   
   color: ${({ borderColor }) => borderColor};
 `;
@@ -114,8 +109,9 @@ export const GlowingText = styled.span<{
 }>`
   color: ${({ glowColor }) => glowColor || productionColors.text.primary};
   
-  animation: ${({ variant }) => variant === 'pulse' ? pulseGlow : breatheGlow} 
-    3s ease-in-out infinite;
+  ${({ variant }) => variant === 'pulse' 
+    ? css`animation: ${pulseGlow} 3s ease-in-out infinite;` 
+    : css`animation: ${breatheGlow} 3s ease-in-out infinite;`}
   
   text-shadow: 
     0 0 8px currentColor,
@@ -135,7 +131,7 @@ export const GlowingIcon = styled.div<{
   
   color: ${({ glowColor }) => glowColor || productionColors.brand.primary};
   
-  animation: ${breatheGlow} 2.5s ease-in-out infinite;
+  ${css`animation: ${breatheGlow} 2.5s ease-in-out infinite;`}
   
   svg {
     width: 100%;
@@ -164,7 +160,7 @@ export const CardHeaderGlow = styled.div<{ accentColor: string }>`
     height: 2px;
     background: ${({ accentColor }) => accentColor};
     
-    animation: ${pulseGlow} 3s ease-in-out infinite;
+    ${css`animation: ${pulseGlow} 3s ease-in-out infinite;`}
     box-shadow: 
       0 0 8px ${({ accentColor }) => accentColor},
       0 0 16px ${({ accentColor }) => accentColor};
@@ -195,7 +191,7 @@ export const AmbientGlow = styled.div<{
     pointer-events: none;
     z-index: -1;
     
-    animation: ${breatheGlow} 4s ease-in-out infinite;
+    ${css`animation: ${breatheGlow} 4s ease-in-out infinite;`}
   }
 `;
 

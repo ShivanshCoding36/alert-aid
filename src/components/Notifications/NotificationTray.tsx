@@ -6,10 +6,10 @@ import { Notification, NotificationFilter } from '../../types/notifications';
 import { Card, Button, Heading, Text, Flex } from '../../styles/components';
 
 // Professional Dark Notification Tray
-const NotificationTray = styled(Card)<{ isOpen: boolean }>`
+const NotificationTray = styled(Card)<{ $isOpen: boolean }>`
   position: fixed;
   top: 70px;
-  right: ${({ isOpen }) => isOpen ? '0' : '-420px'};
+  right: ${({ $isOpen }) => $isOpen ? '0' : '-420px'};
   width: 420px;
   height: calc(100vh - 70px);
   background: ${({ theme }) => theme.colors.surface.default};
@@ -18,8 +18,8 @@ const NotificationTray = styled(Card)<{ isOpen: boolean }>`
   flex-direction: column;
   transition: ${({ theme }) => theme.transitions.normal};
   z-index: ${({ theme }) => theme.zIndex.modal};
-  box-shadow: ${({ isOpen, theme }) => 
-    isOpen ? `-8px 0 32px rgba(0, 0, 0, 0.3)` : 'none'};
+  box-shadow: ${({ $isOpen, theme }) => 
+    $isOpen ? `-8px 0 32px rgba(0, 0, 0, 0.3)` : 'none'};
 `;
 
 const TrayHeader = styled.div`
@@ -45,34 +45,34 @@ const FilterRow = styled(Flex)`
   margin-top: ${({ theme }) => theme.spacing[3]};
 `;
 
-const FilterChip = styled.button<{ active: boolean }>`
+const FilterChip = styled.button<{ $active: boolean }>`
   padding: ${({ theme }) => theme.spacing[1]} ${({ theme }) => theme.spacing[3]};
   border-radius: ${({ theme }) => theme.borderRadius.full};
-  border: 1px solid ${({ theme, active }) => 
-    active ? theme.colors.primary[500] : theme.colors.border.default};
-  background: ${({ theme, active }) => 
-    active ? theme.colors.primary[500] : theme.colors.surface.default};
-  color: ${({ theme, active }) => 
-    active ? theme.colors.text.inverse : theme.colors.text.secondary};
+  border: 1px solid ${({ theme, $active }) => 
+    $active ? theme.colors.primary[500] : theme.colors.border.default};
+  background: ${({ theme, $active }) => 
+    $active ? theme.colors.primary[500] : theme.colors.surface.default};
+  color: ${({ theme, $active }) => 
+    $active ? theme.colors.text.inverse : theme.colors.text.secondary};
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   cursor: pointer;
   transition: ${({ theme }) => theme.transitions.fast};
 
   &:hover {
-    background: ${({ theme, active }) => 
-      active ? theme.colors.primary[600] : theme.colors.surface.hover};
-    border-color: ${({ theme, active }) => 
-      active ? theme.colors.primary[600] : theme.colors.border.light};
+    background: ${({ theme, $active }) => 
+      $active ? theme.colors.primary[600] : theme.colors.surface.hover};
+    border-color: ${({ theme, $active }) => 
+      $active ? theme.colors.primary[600] : theme.colors.border.light};
   }
 `;
 
 // Professional Notification Item
-const NotificationItem = styled.div<{ severity: string; isRead: boolean }>`
+const NotificationItem = styled.div<{ severity: string; $isRead: boolean }>`
   padding: ${({ theme }) => theme.spacing[3]};
   margin-bottom: ${({ theme }) => theme.spacing[1]};
-  background: ${({ theme, isRead }) => 
-    isRead ? theme.colors.surface.default : theme.colors.surface.hover};
+  background: ${({ theme, $isRead }) => 
+    $isRead ? theme.colors.surface.default : theme.colors.surface.hover};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   border-left: 3px solid ${({ severity, theme }) => {
     switch (severity) {
@@ -167,7 +167,7 @@ const NotificationBadge = styled.div<{ count: number }>`
 `;
 
 // Overlay for mobile
-const TrayOverlay = styled.div<{ isOpen: boolean }>`
+const TrayOverlay = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -176,8 +176,8 @@ const TrayOverlay = styled.div<{ isOpen: boolean }>`
   background: ${({ theme }) => theme.colors.overlay.medium};
   backdrop-filter: blur(4px);
   z-index: ${({ theme }) => theme.zIndex.modal - 1};
-  opacity: ${({ isOpen }) => isOpen ? 1 : 0};
-  visibility: ${({ isOpen }) => isOpen ? 'visible' : 'hidden'};
+  opacity: ${({ $isOpen }) => $isOpen ? 1 : 0};
+  visibility: ${({ $isOpen }) => $isOpen ? 'visible' : 'hidden'};
   transition: all 0.2s ease;
   
   @media (min-width: 1024px) {
@@ -265,12 +265,12 @@ export const NotificationTraySystem: React.FC<NotificationTraySystemProps> = () 
 
       {/* Overlay for mobile */}
       <TrayOverlay 
-        isOpen={isOpen} 
+        $isOpen={isOpen} 
         onClick={() => setIsOpen(false)}
       />
 
       {/* Professional Notification Tray */}
-      <NotificationTray isOpen={isOpen}>
+      <NotificationTray $isOpen={isOpen}>
         <TrayHeader>
           <Flex justify="between" align="center">
             <Flex align="center" gap="8px">
@@ -298,25 +298,25 @@ export const NotificationTraySystem: React.FC<NotificationTraySystemProps> = () 
           {/* Filter Controls */}
           <FilterRow>
             <FilterChip
-              active={filter.read === false}
+              $active={filter.read === false}
               onClick={() => toggleFilter('read', false)}
             >
               Unread
             </FilterChip>
             <FilterChip
-              active={filter.priority?.includes('critical') || false}
+              $active={filter.priority?.includes('critical') || false}
               onClick={() => toggleFilter('priority', 'critical')}
             >
               Critical
             </FilterChip>
             <FilterChip
-              active={filter.priority?.includes('high') || false}
+              $active={filter.priority?.includes('high') || false}
               onClick={() => toggleFilter('priority', 'high')}
             >
               High
             </FilterChip>
             <FilterChip
-              active={filter.type?.includes('error') || false}
+              $active={filter.type?.includes('error') || false}
               onClick={() => toggleFilter('type', 'error')}
             >
               Errors
@@ -330,7 +330,7 @@ export const NotificationTraySystem: React.FC<NotificationTraySystemProps> = () 
               <NotificationItem
                 key={notification.id}
                 severity={notification.priority || 'normal'}
-                isRead={notification.read || false}
+                $isRead={notification.read || false}
                 onClick={() => handleNotificationClick(notification)}
               >
                 <NotificationHeader>

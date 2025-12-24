@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { AlertTriangle, TrendingUp, Shield, Activity } from 'lucide-react';
 import InteractiveGlobe from '../ThreeD/InteractiveGlobe';
 
@@ -50,7 +50,7 @@ const HeroContainer = styled.div`
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   overflow: hidden;
   padding: 32px;
-  animation: ${fadeIn} 0.6s ease-out;
+  ${css`animation: ${fadeIn} 0.6s ease-out;`}
   
   /* Animated background gradient */
   &::before {
@@ -61,7 +61,7 @@ const HeroContainer = styled.div`
     width: 200%;
     height: 200%;
     background: radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, transparent 70%);
-    animation: ${rotateGradient} 20s linear infinite;
+    ${css`animation: ${rotateGradient} 20s linear infinite;`}
     pointer-events: none;
     z-index: 0;
   }
@@ -99,14 +99,14 @@ const RiskOverlay = styled.div`
 `;
 
 // Compact Risk Score Circle
-const RiskScoreCircle = styled.div<{ risk: number }>`
+const RiskScoreCircle = styled.div<{ $risk: number }>`
   position: relative;
   width: 160px;
   height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: ${({ risk }) => risk >= 7 ? glowPulse : 'none'} 2s ease-in-out infinite;
+  animation: ${({ $risk }) => $risk >= 7 ? glowPulse : 'none'} 2s ease-in-out infinite;
   
   @media (max-width: 768px) {
     width: 140px;
@@ -128,23 +128,23 @@ const CircleBackground = styled.circle`
   stroke-width: 10;
 `;
 
-const CircleProgress = styled.circle<{ risk: number }>`
+const CircleProgress = styled.circle<{ $risk: number }>`
   fill: none;
   stroke-width: 10;
   stroke-linecap: round;
-  stroke: ${({ risk }) => {
-    if (risk >= 7) return 'url(#highRiskGradient)';
-    if (risk >= 4) return 'url(#moderateRiskGradient)';
+  stroke: ${({ $risk }) => {
+    if ($risk >= 7) return 'url(#highRiskGradient)';
+    if ($risk >= 4) return 'url(#moderateRiskGradient)';
     return 'url(#lowRiskGradient)';
   }};
   stroke-dasharray: ${2 * Math.PI * 70};
-  stroke-dashoffset: ${({ risk }) => {
+  stroke-dashoffset: ${({ $risk }) => {
     const circumference = 2 * Math.PI * 70;
-    return circumference - (risk / 10) * circumference;
+    return circumference - ($risk / 10) * circumference;
   }};
   transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1),
               stroke 0.3s ease;
-  animation: ${pulseRing} 3s ease-in-out infinite;
+  ${css`animation: ${pulseRing} 3s ease-in-out infinite;`}
 `;
 
 const ScoreDisplay = styled.div`
@@ -153,13 +153,13 @@ const ScoreDisplay = styled.div`
   text-align: center;
 `;
 
-const ScoreNumber = styled.div<{ risk: number }>`
+const ScoreNumber = styled.div<{ $risk: number }>`
   font-size: 48px;
   font-weight: 800;
   line-height: 1;
-  background: ${({ risk }) => {
-    if (risk >= 7) return 'linear-gradient(135deg, #EF4444 0%, #F97316 100%)';
-    if (risk >= 4) return 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)';
+  background: ${({ $risk }) => {
+    if ($risk >= 7) return 'linear-gradient(135deg, #EF4444 0%, #F97316 100%)';
+    if ($risk >= 4) return 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)';
     return 'linear-gradient(135deg, #22C55E 0%, #10B981 100%)';
   }};
   -webkit-background-clip: text;
@@ -178,46 +178,46 @@ const ScoreLabel = styled.div`
 `;
 
 // Risk Status Badge
-const RiskStatusBadge = styled.div<{ risk: number }>`
+const RiskStatusBadge = styled.div<{ $risk: number }>`
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 16px 28px;
   border-radius: 16px;
-  background: ${({ risk }) => {
-    if (risk >= 7) return 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(249, 115, 22, 0.15))';
-    if (risk >= 4) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(234, 179, 8, 0.15))';
+  background: ${({ $risk }) => {
+    if ($risk >= 7) return 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(249, 115, 22, 0.15))';
+    if ($risk >= 4) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(234, 179, 8, 0.15))';
     return 'linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15))';
   }};
-  border: 1px solid ${({ risk }) => {
-    if (risk >= 7) return 'rgba(239, 68, 68, 0.3)';
-    if (risk >= 4) return 'rgba(245, 158, 11, 0.3)';
+  border: 1px solid ${({ $risk }) => {
+    if ($risk >= 7) return 'rgba(239, 68, 68, 0.3)';
+    if ($risk >= 4) return 'rgba(245, 158, 11, 0.3)';
     return 'rgba(34, 197, 94, 0.3)';
   }};
-  box-shadow: ${({ risk }) => {
-    if (risk >= 7) return '0 8px 24px rgba(239, 68, 68, 0.2)';
-    if (risk >= 4) return '0 8px 24px rgba(245, 158, 11, 0.2)';
+  box-shadow: ${({ $risk }) => {
+    if ($risk >= 7) return '0 8px 24px rgba(239, 68, 68, 0.2)';
+    if ($risk >= 4) return '0 8px 24px rgba(245, 158, 11, 0.2)';
     return '0 8px 24px rgba(34, 197, 94, 0.2)';
   }};
-  animation: ${fadeIn} 0.8s ease-out 0.2s both;
+  ${css`animation: ${fadeIn} 0.8s ease-out 0.2s both;`}
   
   svg {
     width: 20px;
     height: 20px;
-    color: ${({ risk }) => {
-      if (risk >= 7) return '#EF4444';
-      if (risk >= 4) return '#F59E0B';
+    color: ${({ $risk }) => {
+      if ($risk >= 7) return '#EF4444';
+      if ($risk >= 4) return '#F59E0B';
       return '#22C55E';
     }};
   }
 `;
 
-const RiskStatusText = styled.div<{ risk: number }>`
+const RiskStatusText = styled.div<{ $risk: number }>`
   font-size: 16px;
   font-weight: 700;
-  color: ${({ risk }) => {
-    if (risk >= 7) return '#EF4444';
-    if (risk >= 4) return '#F59E0B';
+  color: ${({ $risk }) => {
+    if ($risk >= 7) return '#EF4444';
+    if ($risk >= 4) return '#F59E0B';
     return '#22C55E';
   }};
   white-space: nowrap;
@@ -228,7 +228,7 @@ const RiskDescription = styled.div`
   text-align: center;
   max-width: 600px;
   padding: 0 16px;
-  animation: ${fadeIn} 0.8s ease-out 0.3s both;
+  ${css`animation: ${fadeIn} 0.8s ease-out 0.3s both;`}
 `;
 
 const RiskDescTitle = styled.div`
@@ -286,7 +286,7 @@ const LiveIndicator = styled.div`
   border-radius: 20px;
   backdrop-filter: blur(10px);
   z-index: 10;
-  animation: ${fadeIn} 0.8s ease-out 0.5s both;
+  ${css`animation: ${fadeIn} 0.8s ease-out 0.5s both;`}
 `;
 
 const PulseDot = styled.div`
@@ -295,7 +295,7 @@ const PulseDot = styled.div`
   border-radius: 50%;
   background: #EF4444;
   box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
-  animation: ${pulseRing} 2s ease-in-out infinite;
+  ${css`animation: ${pulseRing} 2s ease-in-out infinite;`}
 `;
 
 const LiveText = styled.span`
@@ -360,7 +360,7 @@ export const GlobeRiskHero: React.FC<GlobeRiskHeroProps> = ({
         {/* Risk Score Overlay at Top */}
         <RiskOverlay>
           {/* Circular Risk Score */}
-          <RiskScoreCircle risk={score}>
+          <RiskScoreCircle $risk={score}>
             <CircleSvg width="160" height="160" viewBox="0 0 160 160">
               <defs>
                 {/* High Risk Gradient */}
@@ -380,10 +380,10 @@ export const GlobeRiskHero: React.FC<GlobeRiskHeroProps> = ({
                 </linearGradient>
               </defs>
               <CircleBackground cx="80" cy="80" r="70" />
-              <CircleProgress cx="80" cy="80" r="70" risk={score} />
+              <CircleProgress cx="80" cy="80" r="70" $risk={score} />
             </CircleSvg>
             <ScoreDisplay>
-              <ScoreNumber risk={score}>
+              <ScoreNumber $risk={score}>
                 {isCalculating ? '—' : score.toFixed(1)}
               </ScoreNumber>
               <ScoreLabel>Risk Score</ScoreLabel>
@@ -391,9 +391,9 @@ export const GlobeRiskHero: React.FC<GlobeRiskHeroProps> = ({
           </RiskScoreCircle>
 
           {/* Risk Status Badge */}
-          <RiskStatusBadge risk={score}>
+          <RiskStatusBadge $risk={score}>
             <RiskIcon />
-            <RiskStatusText risk={score}>{riskLevel.label}</RiskStatusText>
+            <RiskStatusText $risk={score}>{riskLevel.label}</RiskStatusText>
           </RiskStatusBadge>
         </RiskOverlay>
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation as useRouterLocation } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import styled from 'styled-components';
 import { theme } from './styles/theme';
@@ -17,11 +17,10 @@ import AlertsPage from './pages/AlertsPage';
 import EvacuationPage from './pages/EvacuationPage';
 import VerificationDashboard from './components/Verification/VerificationDashboard';
 import EnhancedLocationPermissionModal from './components/Location/EnhancedLocationPermissionModal';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import logger from './utils/logger';
 import { productionColors } from './styles/production-ui-system';
-// Import location override utility
 import './utils/locationOverride';
-import * as Sentry from "@sentry/react";
 
 // Skip to content link for accessibility
 const SkipToContent = styled.a`
@@ -69,7 +68,20 @@ const cleanupInvalidCaches = () => {
 // Main App Content Component
 const AppContent: React.FC = () => {
   const { showLocationModal, setLocation } = useLocation();
-  const [currentPage, setCurrentPage] = React.useState('home');
+  const navigate = useNavigate();
+  const routerLocation = useRouterLocation();
+  
+  // Derive current page from the URL path
+  const currentPage = React.useMemo(() => {
+    const path = routerLocation.pathname.replace('/', '') || 'home';
+    return path;
+  }, [routerLocation.pathname]);
+
+  // Handle navigation using React Router (no page reload)
+  const handleNavigate = React.useCallback((page: string) => {
+    const targetPath = page === 'home' ? '/' : `/${page}`;
+    navigate(targetPath);
+  }, [navigate]);
   
   return (
     <>
@@ -79,12 +91,9 @@ const AppContent: React.FC = () => {
       <div className="App" id="main-content">
         <NavigationBar 
           currentPage={currentPage}
-          onNavigate={(page) => {
-            setCurrentPage(page);
-            window.location.href = `/${page === 'home' ? '' : page}`;
-          }}
+          onNavigate={handleNavigate}
         />
-        <Sentry.ErrorBoundary fallback={<p>An error has occurred</p>} showDialog>
+        <ErrorBoundary componentName="MainContent">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<HomePage />} />
@@ -94,7 +103,7 @@ const AppContent: React.FC = () => {
             <Route path="/evacuation" element={<EvacuationPage />} />
             <Route path="/verify" element={<VerificationDashboard />} />
           </Routes>
-        </Sentry.ErrorBoundary>
+        </ErrorBoundary>
       </div>
       
       {/* Location Permission Modal - Blocks dashboard until location is set */}

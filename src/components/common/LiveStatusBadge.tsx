@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 const pulseDot = keyframes`
   0%, 100% {
@@ -68,7 +68,7 @@ const PulseDot = styled.div<{ color?: string; size?: 'sm' | 'md' | 'lg' }>`
   border-radius: 50%;
   background: ${({ color }) => color || '#EF4444'};
   box-shadow: 0 0 10px ${({ color }) => color || 'rgba(239, 68, 68, 0.6)'};
-  animation: ${pulseDot} 2s ease-in-out infinite;
+  ${css`animation: ${pulseDot} 2s ease-in-out infinite;`}
   flex-shrink: 0;
 `;
 

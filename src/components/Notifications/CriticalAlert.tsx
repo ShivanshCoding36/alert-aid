@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { AlertTriangle, X, ArrowRight } from 'lucide-react';
 import { Notification } from '../../types/notifications';
 import { Button, Text, Flex } from '../../styles/components';
@@ -29,7 +29,7 @@ const CriticalAlertContainer = styled.div<{ isVisible: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   z-index: ${({ theme }) => theme.zIndex.notification};
-  animation: ${fadeIn} 0.3s ease-out;
+  ${css`animation: ${fadeIn} 0.3s ease-out;`}
   opacity: ${({ isVisible }) => isVisible ? 1 : 0};
   visibility: ${({ isVisible }) => isVisible ? 'visible' : 'hidden'};
   transition: opacity 0.3s ease, visibility 0.3s ease;

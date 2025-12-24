@@ -8,6 +8,8 @@ const AlertsContainer = styled.div`
   padding: 88px 24px 24px;
   background: ${productionColors.background.primary};
   color: ${productionColors.text.primary};
+  position: relative;
+  z-index: 1;
 `;
 
 const PageHeader = styled.div`

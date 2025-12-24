@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { AlertTriangle, TrendingUp, Shield, Activity } from 'lucide-react';
 
 // Animations
@@ -35,7 +35,7 @@ const RiskScoreContainer = styled.div`
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
-  animation: ${fadeIn} 0.6s ease-out;
+  ${css`animation: ${fadeIn} 0.6s ease-out;`}
   
   &::before {
     content: '';
@@ -45,7 +45,7 @@ const RiskScoreContainer = styled.div`
     width: 200%;
     height: 200%;
     background: radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, transparent 70%);
-    animation: ${rotateGradient} 20s linear infinite;
+    ${css`animation: ${rotateGradient} 20s linear infinite;`}
     pointer-events: none;
   }
 `;
@@ -69,23 +69,23 @@ const CircleBackground = styled.circle`
   stroke-width: 12;
 `;
 
-const CircleProgress = styled.circle<{ risk: number }>`
+const CircleProgress = styled.circle<{ $risk: number }>`
   fill: none;
   stroke-width: 12;
   stroke-linecap: round;
-  stroke: ${({ risk }) => {
-    if (risk >= 7) return 'url(#highRiskGradient)';
-    if (risk >= 4) return 'url(#moderateRiskGradient)';
+  stroke: ${({ $risk }) => {
+    if ($risk >= 7) return 'url(#highRiskGradient)';
+    if ($risk >= 4) return 'url(#moderateRiskGradient)';
     return 'url(#lowRiskGradient)';
   }};
   stroke-dasharray: ${2 * Math.PI * 130};
-  stroke-dashoffset: ${({ risk }) => {
+  stroke-dashoffset: ${({ $risk }) => {
     const circumference = 2 * Math.PI * 130;
-    return circumference - (risk / 10) * circumference;
+    return circumference - ($risk / 10) * circumference;
   }};
   transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1),
               stroke 0.3s ease;
-  animation: ${pulseRing} 3s ease-in-out infinite;
+  ${css`animation: ${pulseRing} 3s ease-in-out infinite;`}
 `;
 
 // Score Display
@@ -98,20 +98,20 @@ const ScoreDisplay = styled.div`
   z-index: 2;
 `;
 
-const ScoreNumber = styled.div<{ risk: number }>`
+const ScoreNumber = styled.div<{ $risk: number }>`
   font-size: 72px;
   font-weight: 800;
   line-height: 1;
-  background: ${({ risk }) => {
-    if (risk >= 7) return 'linear-gradient(135deg, #EF4444 0%, #F97316 100%)';
-    if (risk >= 4) return 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)';
+  background: ${({ $risk }) => {
+    if ($risk >= 7) return 'linear-gradient(135deg, #EF4444 0%, #F97316 100%)';
+    if ($risk >= 4) return 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)';
     return 'linear-gradient(135deg, #22C55E 0%, #10B981 100%)';
   }};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: drop-shadow(0 4px 12px rgba(239, 68, 68, 0.3));
-  animation: ${fadeIn} 0.8s ease-out 0.2s both;
+  ${css`animation: ${fadeIn} 0.8s ease-out 0.2s both;`}
 `;
 
 const ScoreLabel = styled.div`
@@ -121,51 +121,51 @@ const ScoreLabel = styled.div`
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-top: 8px;
-  animation: ${fadeIn} 0.8s ease-out 0.3s both;
+  ${css`animation: ${fadeIn} 0.8s ease-out 0.3s both;`}
 `;
 
 // Risk Status
-const RiskStatus = styled.div<{ risk: number }>`
+const RiskStatus = styled.div<{ $risk: number }>`
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 16px 28px;
   border-radius: 16px;
-  background: ${({ risk }) => {
-    if (risk >= 7) return 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(249, 115, 22, 0.15))';
-    if (risk >= 4) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(234, 179, 8, 0.15))';
+  background: ${({ $risk }) => {
+    if ($risk >= 7) return 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(249, 115, 22, 0.15))';
+    if ($risk >= 4) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(234, 179, 8, 0.15))';
     return 'linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15))';
   }};
-  border: 1px solid ${({ risk }) => {
-    if (risk >= 7) return 'rgba(239, 68, 68, 0.3)';
-    if (risk >= 4) return 'rgba(245, 158, 11, 0.3)';
+  border: 1px solid ${({ $risk }) => {
+    if ($risk >= 7) return 'rgba(239, 68, 68, 0.3)';
+    if ($risk >= 4) return 'rgba(245, 158, 11, 0.3)';
     return 'rgba(34, 197, 94, 0.3)';
   }};
-  box-shadow: ${({ risk }) => {
-    if (risk >= 7) return '0 8px 24px rgba(239, 68, 68, 0.2)';
-    if (risk >= 4) return '0 8px 24px rgba(245, 158, 11, 0.2)';
+  box-shadow: ${({ $risk }) => {
+    if ($risk >= 7) return '0 8px 24px rgba(239, 68, 68, 0.2)';
+    if ($risk >= 4) return '0 8px 24px rgba(245, 158, 11, 0.2)';
     return '0 8px 24px rgba(34, 197, 94, 0.2)';
   }};
   margin-bottom: 24px;
-  animation: ${fadeIn} 0.8s ease-out 0.4s both;
+  ${css`animation: ${fadeIn} 0.8s ease-out 0.4s both;`}
   
   svg {
     width: 24px;
     height: 24px;
-    color: ${({ risk }) => {
-      if (risk >= 7) return '#EF4444';
-      if (risk >= 4) return '#F59E0B';
+    color: ${({ $risk }) => {
+      if ($risk >= 7) return '#EF4444';
+      if ($risk >= 4) return '#F59E0B';
       return '#22C55E';
     }};
   }
 `;
 
-const RiskStatusText = styled.div<{ risk: number }>`
+const RiskStatusText = styled.div<{ $risk: number }>`
   font-size: 18px;
   font-weight: 700;
-  color: ${({ risk }) => {
-    if (risk >= 7) return '#EF4444';
-    if (risk >= 4) return '#F59E0B';
+  color: ${({ $risk }) => {
+    if ($risk >= 7) return '#EF4444';
+    if ($risk >= 4) return '#F59E0B';
     return '#22C55E';
   }};
 `;
@@ -175,7 +175,7 @@ const RiskDescription = styled.div`
   text-align: center;
   max-width: 500px;
   line-height: 1.6;
-  animation: ${fadeIn} 0.8s ease-out 0.5s both;
+  ${css`animation: ${fadeIn} 0.8s ease-out 0.5s both;`}
 `;
 
 const RiskDescTitle = styled.div`
@@ -254,20 +254,20 @@ export const GlobalRiskScore: React.FC<GlobalRiskScoreProps> = ({
             </linearGradient>
           </defs>
           <CircleBackground cx="140" cy="140" r="130" />
-          <CircleProgress cx="140" cy="140" r="130" risk={score} />
+          <CircleProgress cx="140" cy="140" r="130" $risk={score} />
         </CircleSvg>
         
         <ScoreDisplay>
-          <ScoreNumber risk={score}>
+          <ScoreNumber $risk={score}>
             {isCalculating ? '...' : score.toFixed(1)}
           </ScoreNumber>
           <ScoreLabel>Risk Score</ScoreLabel>
         </ScoreDisplay>
       </CircleContainer>
 
-      <RiskStatus risk={score}>
+      <RiskStatus $risk={score}>
         <RiskIcon />
-        <RiskStatusText risk={score}>
+        <RiskStatusText $risk={score}>
           {isCalculating ? 'Calculating...' : riskLevel.label}
         </RiskStatusText>
       </RiskStatus>

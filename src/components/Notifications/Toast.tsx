@@ -139,7 +139,7 @@ const ToastContainer = styled.div<{
           default: return theme.colors.primary[500];
         }
       })()};
-      animation: ${progressAnimation} ${duration}ms linear forwards;
+      ${css`animation: ${progressAnimation} ${duration}ms linear forwards;`}
     }
   `}
 `;

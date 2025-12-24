@@ -54,6 +54,14 @@ if SENTRY_AVAILABLE:
 # Import route modules
 from routes import health, weather, predict, alerts, external_apis
 
+# Import advanced ML routes (try/except for graceful degradation)
+try:
+    from routes import flood_forecast
+    ADVANCED_ML_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️ Advanced ML routes not available: {e}")
+    ADVANCED_ML_AVAILABLE = False
+
 # Environment variables
 OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY", "demo_key")
 USGS_EARTHQUAKE_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query"
@@ -182,6 +190,10 @@ app.include_router(weather.router, prefix="/api", tags=["Weather"])
 app.include_router(predict.router, prefix="/api", tags=["ML Predictions"])
 app.include_router(alerts.router, prefix="/api", tags=["Alerts"])
 app.include_router(external_apis.router, prefix="/api", tags=["External Data"])
+
+# Register advanced ML routes if available
+if ADVANCED_ML_AVAILABLE:
+    app.include_router(flood_forecast.router, prefix="/api", tags=["Advanced Flood ML"])
 
 # Root endpoint
 @app.get("/")

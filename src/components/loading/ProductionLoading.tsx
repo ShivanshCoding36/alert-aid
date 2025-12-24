@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { Loader2, AlertTriangle, Shield } from 'lucide-react';
 import { 
   productionColors, 
@@ -40,7 +40,7 @@ const slideUpAnimation = keyframes`
 `;
 
 // Loading overlay for full-screen loading
-const LoadingOverlayContainer = styled.div<{ isVisible: boolean }>`
+const LoadingOverlayContainer = styled.div<{ $isVisible: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -53,8 +53,8 @@ const LoadingOverlayContainer = styled.div<{ isVisible: boolean }>`
   justify-content: center;
   z-index: 9999;
   
-  opacity: ${({ isVisible }) => isVisible ? '1' : '0'};
-  visibility: ${({ isVisible }) => isVisible ? 'visible' : 'hidden'};
+  opacity: ${({ $isVisible }) => $isVisible ? '1' : '0'};
+  visibility: ${({ $isVisible }) => $isVisible ? 'visible' : 'hidden'};
   transition: all ${productionAnimations.duration.slow} ${productionAnimations.easing.smooth};
 `;
 
@@ -72,14 +72,14 @@ const LoadingContent = styled.div`
     0 10px 20px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   
-  animation: ${slideUpAnimation} ${productionAnimations.duration.slow} ${productionAnimations.easing.smooth};
+  ${css`animation: ${slideUpAnimation} ${productionAnimations.duration.slow} ${productionAnimations.easing.smooth};`}
 `;
 
 const LoadingIcon = styled.div`
   width: 48px;
   height: 48px;
   color: ${productionColors.brand.primary};
-  animation: ${spinAnimation} 2s linear infinite;
+  ${css`animation: ${spinAnimation} 2s linear infinite;`}
 `;
 
 const LoadingText = styled.h2`
@@ -108,7 +108,7 @@ const SkeletonBase = styled.div`
     ${productionColors.background.secondary} 80px
   );
   background-size: 200px 100%;
-  animation: ${shimmerAnimation} 1.5s infinite;
+  ${css`animation: ${shimmerAnimation} 1.5s infinite;`}
   border-radius: 4px;
 `;
 
@@ -146,28 +146,28 @@ const SkeletonGrid = styled.div`
 `;
 
 // Inline loading spinner
-const InlineSpinner = styled.div<{ size?: 'sm' | 'md' | 'lg' }>`
-  width: ${({ size = 'md' }) => {
-    switch (size) {
+const InlineSpinner = styled.div<{ $size?: 'sm' | 'md' | 'lg' }>`
+  width: ${({ $size = 'md' }) => {
+    switch ($size) {
       case 'sm': return '16px';
       case 'lg': return '32px';
       default: return '24px';
     }
   }};
-  height: ${({ size = 'md' }) => {
-    switch (size) {
+  height: ${({ $size = 'md' }) => {
+    switch ($size) {
       case 'sm': return '16px';
       case 'lg': return '32px';
       default: return '24px';
     }
   }};
   color: ${productionColors.brand.primary};
-  animation: ${spinAnimation} 1s linear infinite;
+  ${css`animation: ${spinAnimation} 1s linear infinite;`}
   display: inline-block;
 `;
 
 // Loading button state
-const LoadingButton = styled.button<{ isLoading?: boolean; variant?: 'primary' | 'secondary' }>`
+const LoadingButton = styled.button<{ $isLoading?: boolean; $variant?: 'primary' | 'secondary' }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -177,24 +177,24 @@ const LoadingButton = styled.button<{ isLoading?: boolean; variant?: 'primary' |
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
-  cursor: ${({ isLoading }) => isLoading ? 'not-allowed' : 'pointer'};
+  cursor: ${({ $isLoading }) => $isLoading ? 'not-allowed' : 'pointer'};
   transition: all ${productionAnimations.duration.normal} ${productionAnimations.easing.smooth};
   
-  background: ${({ variant = 'primary', isLoading }) => {
-    if (isLoading) return productionColors.interactive.disabled;
-    return variant === 'primary' 
+  background: ${({ $variant = 'primary', $isLoading }) => {
+    if ($isLoading) return productionColors.interactive.disabled;
+    return $variant === 'primary' 
       ? productionColors.gradients.brand
       : productionColors.background.tertiary;
   }};
   
-  color: ${({ variant = 'primary', isLoading }) => {
-    if (isLoading) return productionColors.text.disabled;
-    return variant === 'primary' ? 'white' : productionColors.text.primary;
+  color: ${({ $variant = 'primary', $isLoading }) => {
+    if ($isLoading) return productionColors.text.disabled;
+    return $variant === 'primary' ? 'white' : productionColors.text.primary;
   }};
   
-  border: 1px solid ${({ variant = 'primary', isLoading }) => {
-    if (isLoading) return productionColors.border.secondary;
-    return variant === 'primary' 
+  border: 1px solid ${({ $variant = 'primary', $isLoading }) => {
+    if ($isLoading) return productionColors.border.secondary;
+    return $variant === 'primary' 
       ? productionColors.brand.secondary
       : productionColors.border.primary;
   }};
@@ -230,7 +230,7 @@ const ErrorIcon = styled.div`
   width: 48px;
   height: 48px;
   color: ${productionColors.status.error};
-  animation: ${pulseAnimation} 2s infinite;
+  ${css`animation: ${pulseAnimation} 2s infinite;`}
 `;
 
 const ErrorTitle = styled.h3`
@@ -253,7 +253,7 @@ export const FullScreenLoader: React.FC<{
   title?: string;
   message?: string;
 }> = ({ isVisible, title = "Loading Alert Aid", message = "Please wait while we initialize your dashboard..." }) => (
-  <LoadingOverlayContainer isVisible={isVisible}>
+  <LoadingOverlayContainer $isVisible={isVisible}>
     <LoadingContent>
       <LoadingIcon>
         <Shield size={48} />
@@ -283,7 +283,7 @@ export const SkeletonDashboard: React.FC = () => (
 export const Spinner: React.FC<{
   size?: 'sm' | 'md' | 'lg';
 }> = ({ size = 'md' }) => (
-  <InlineSpinner size={size}>
+  <InlineSpinner $size={size}>
     <Loader2 />
   </InlineSpinner>
 );
@@ -296,8 +296,8 @@ export const LoadingButtonComponent: React.FC<{
   disabled?: boolean;
 }> = ({ isLoading, variant = 'primary', children, onClick, disabled }) => (
   <LoadingButton
-    isLoading={isLoading}
-    variant={variant}
+    $isLoading={isLoading}
+    $variant={variant}
     onClick={onClick}
     disabled={disabled || isLoading}
   >

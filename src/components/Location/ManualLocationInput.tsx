@@ -26,7 +26,7 @@ interface PlaceResult {
   };
 }
 
-const ModalOverlay = styled.div<{ isOpen: boolean }>`
+const ModalOverlay = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -38,8 +38,8 @@ const ModalOverlay = styled.div<{ isOpen: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
-  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+  visibility: ${({ $isOpen }) => ($isOpen ? 'visible' : 'hidden')};
   transition: all 0.3s ease;
   padding: ${spacing.xl};
 `;
@@ -339,7 +339,7 @@ export const ManualLocationInput: React.FC<ManualLocationInputProps> = ({
   if (!isOpen) return null;
 
   return (
-    <ModalOverlay isOpen={isOpen}>
+    <ModalOverlay $isOpen={isOpen}>
       <ModalContent role="dialog" aria-labelledby="manual-location-title">
         <ModalHeader>
           <ModalTitle id="manual-location-title">

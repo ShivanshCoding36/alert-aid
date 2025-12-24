@@ -94,7 +94,7 @@ const IncidentTimelineCard: React.FC<IncidentTimelineCardProps> = ({ incidents }
             Recent Events
           </h4>
           
-          {incidents.slice(0, 3).map((incident, index) => (
+          {(incidents || []).slice(0, 3).map((incident, index) => (
             <FlexRow 
               key={index} 
               gap="1rem" 

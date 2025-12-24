@@ -1,149 +1,216 @@
-# 🚨 Alert Aid - AI-Powered Disaster Prediction Dashboard
+# 🚨 Alert-AID - AI-Powered Disaster Alert System
 
-<div align="center">
+A real-time disaster monitoring and emergency response application built with React, TypeScript, and FastAPI. Features ML-powered predictions, interactive evacuation maps, and live weather alerts.
 
-![Alert Aid Banner](https://capsule-render.vercel.app/api?type=waving&color=gradient&height=300&section=header&text=Alert%20Aid&fontSize=90&animation=fadeIn&fontAlignY=38&desc=AI-Powered%20Disaster%20Prediction%20&%20Response%20System&descAlignY=51&descAlign=62)
+![Alert-AID Dashboard](https://img.shields.io/badge/Status-Production%20Ready-green)
+![React](https://img.shields.io/badge/React-18.x-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
+![Python](https://img.shields.io/badge/Python-3.10+-yellow)
 
-<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=2F855A&background=00000000&center=true&vCenter=true&width=435&lines=Predicting+Floods...;Monitoring+Earthquakes...;Tracking+Wildfires...;Analyzing+Storms...;Saving+Lives." alt="Typing SVG" /></a>
+## ✨ Features
 
-<img src="https://skillicons.dev/icons?i=react,ts,python,fastapi,sklearn,pandas,sentry,vercel,railway,threejs,styledcomponents&perline=11" />
+### 🌍 Real-Time Monitoring
+- **Live Weather Data** - OpenWeatherMap & Open-Meteo APIs
+- **7-Day Forecast** - Accurate predictions with smart caching
+- **Air Quality Index** - Real-time AQI monitoring
+- **Multi-Hazard Alerts** - Earthquakes, floods, storms, wildfires
 
-**Professional disaster prediction and emergency management system powered by Machine Learning**
+### 🗺️ Interactive Maps
+- **Evacuation Routes** - OpenStreetMap with Leaflet
+- **Real Shelter Locations** - Hospitals, fire stations, police, schools
+- **Live Risk Visualization** - Flood zones, earthquake epicenters
+- **Route Planning** - Distance to nearest shelters
 
-[View Demo](https://alert-aid.vercel.app) • [Report Bug](https://github.com/ayushap18/congenial-waddle/issues) • [Request Feature](https://github.com/ayushap18/congenial-waddle/issues)
+### 🤖 AI/ML Predictions
+- **Disaster Risk Scoring** - Multi-factor risk assessment
+- **Weather-Based Alerts** - Predictive warnings
+- **Anomaly Detection** - Unusual pattern recognition
+- **Ensemble Predictions** - Multiple ML models
 
-</div>
+### 📱 User Features
+- **Geolocation** - Auto-detect user location
+- **Push Notifications** - Critical alert system
+- **Emergency Contacts** - Quick access to services
+- **Safety Checklists** - Evacuation guides
 
----
+## 🚀 Quick Start
 
-![Overview](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=70&section=header&text=Overview&fontSize=40&fontColor=ffffff)
+### Prerequisites
+- Node.js 18+
+- Python 3.10+
+- npm or yarn
 
-**Alert Aid** is a production-ready disaster prediction system that leverages **Artificial Intelligence** to save lives. By analyzing real-time environmental data, it predicts the probability of natural disasters like floods, wildfires, earthquakes, and storms with **90%+ accuracy**.
+### Installation
 
-### 🚀 New Features (v2.0)
-
-| Feature | Description | Tech Stack |
-|---------|-------------|------------|
-| **📊 Interactive ML Dashboard** | Manual risk prediction playground | ![Streamlit](https://img.shields.io/badge/-Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white) |
-| **🛡️ Real-time Monitoring** | Full-stack error tracking & performance profiling | ![Sentry](https://img.shields.io/badge/-Sentry-362D59?style=flat&logo=sentry&logoColor=white) |
-| **🌍 3D Visualization** | Interactive globe with heatmaps | ![Three.js](https://img.shields.io/badge/-Three.js-000000?style=flat&logo=three.js&logoColor=white) |
-
----
-
-![Project Stats](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=70&section=header&text=Project%20Stats&fontSize=40&fontColor=ffffff)
-
-<div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=ayushap18&show_icons=true&theme=radical" height="150" alt="stats graph"  />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ayushap18&layout=compact&theme=radical" height="150" alt="languages graph" />
-</div>
-
----
-
-![Quick Start](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=70&section=header&text=Quick%20Start&fontSize=40&fontColor=ffffff)
-
-### 1. Clone the Repository
 ```bash
-git clone https://github.com/ayushap18/congenial-waddle.git
-cd congenial-waddle
-```
+# Clone the repository
+git clone https://github.com/yourusername/Alert-AID.git
+cd Alert-AID
 
-### 2. Setup Backend (FastAPI + Streamlit)
-```bash
-cd backend
-pip install -r requirements.txt
-
-# Start API Server
-uvicorn main:app --reload --port 8000
-
-# Start ML Dashboard (New!)
-streamlit run streamlit_app.py
-```
-
-### 3. Setup Frontend (React)
-```bash
-# Open a new terminal
-cd ..
+# Install frontend dependencies
 npm install
+
+# Install backend dependencies
+cd backend
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### Running the App
+
+```bash
+# Terminal 1: Start backend
+cd backend
+source venv/bin/activate
+python -m uvicorn simple_backend:app --host 0.0.0.0 --port 8000
+
+# Terminal 2: Start frontend
 npm start
 ```
 
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 🏗️ Project Structure
+
+```
+Alert-AID/
+├── src/                    # React frontend
+│   ├── components/         # UI components
+│   │   ├── Dashboard/      # Main dashboard widgets
+│   │   ├── Map/            # Leaflet evacuation maps
+│   │   ├── Emergency/      # Emergency response panels
+│   │   └── Safety/         # Safety modules
+│   ├── services/           # API services
+│   ├── hooks/              # Custom React hooks
+│   ├── contexts/           # React contexts
+│   └── pages/              # Page components
+├── backend/                # FastAPI backend
+│   ├── routes/             # API endpoints
+│   ├── ml/                 # Machine learning models
+│   └── models/             # Trained model files
+├── public/                 # Static assets
+└── build/                  # Production build
+```
+
+## 🔌 API Integrations
+
+| Service | Purpose | Free Tier |
+|---------|---------|-----------|
+| OpenWeatherMap | Weather data | 1000 calls/day |
+| Open-Meteo | Weather backup | Unlimited |
+| OpenStreetMap | Maps & tiles | Unlimited |
+| Overpass API | Shelter data | Unlimited |
+| USGS | Earthquake data | Unlimited |
+| NASA EONET | Natural events | Unlimited |
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Styled Components** - CSS-in-JS
+- **Leaflet** - Interactive maps
+- **Recharts** - Data visualization
+- **Lucide Icons** - Icon library
+
+### Backend
+- **FastAPI** - Python API framework
+- **Uvicorn** - ASGI server
+- **Scikit-learn** - ML models
+- **Pandas/NumPy** - Data processing
+
+## 📊 Dashboard Components
+
+- **GlobeRiskHero** - 3D risk visualization
+- **SevenDayForecast** - Weather predictions
+- **CurrentAlerts** - Active disaster alerts
+- **MultiHazardPanel** - Risk by disaster type
+- **AirQualityWidget** - AQI monitoring
+- **LeafletEvacuationMap** - Evacuation routes
+
+## 🗺️ Evacuation Map Features
+
+- 📍 Auto-detect user location
+- 🏥 Real hospital locations
+- 🚒 Fire stations nearby
+- 👮 Police stations
+- 🏫 Schools (assembly points)
+- ➡️ Route lines to shelters
+- 📏 Distance calculations
+- 🔄 Refresh data on demand
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the root:
+
+```env
+REACT_APP_API_URL=http://localhost:8000
+REACT_APP_OPENWEATHER_API_KEY=your_api_key
+```
+
+## 🚢 Deployment
+
+### Vercel (Frontend)
+```bash
+npm run build
+vercel deploy
+```
+
+### Render (Backend)
+The `render.yaml` file is pre-configured for deployment.
+
+### Docker
+```bash
+docker build -t alert-aid .
+docker run -p 3000:3000 alert-aid
+```
+
+## 📱 Screenshots
+
+### Dashboard
+- Real-time weather monitoring
+- Multi-hazard risk assessment
+- Interactive 3D globe visualization
+
+### Evacuation Map
+- Leaflet-based interactive map
+- Real shelter markers
+- Route planning to safety
+
+## 🔒 Security
+
+- No sensitive API keys in client code
+- Environment variable protection
+- CORS configuration
+- Rate limiting on API calls
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing`)
+5. Open a Pull Request
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file.
+
+## 👤 Author
+
+**Ayush**
+- GitHub: [@ayush18](https://github.com/ayush18)
+
+## 🙏 Acknowledgments
+
+- OpenStreetMap contributors
+- OpenWeatherMap API
+- NASA EONET
+- USGS Earthquake Hazards Program
+
 ---
 
-![Key Features](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=70&section=header&text=Key%20Features&fontSize=40&fontColor=ffffff)
+⭐ **Star this repo if you find it helpful!**
 
-*   **🌦️ Weather Monitoring**: Real-time data, 7-day forecasts, and AQI tracking.
-*   **📍 Location Services**: GPS detection, manual search, and triple API fallback.
-*   **🚨 Emergency Response**: SOS alerts, evacuation planning, and resource management.
-*   **📊 Data Reporting**: PDF/CSV exports with ML performance metrics.
-*   **🎨 Modern UI**: Dark theme, responsive design, and 3D globe visualization.
-
----
-
-![New Dashboards](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=70&section=header&text=New%20Dashboards&fontSize=40&fontColor=ffffff)
-
-### 🧠 Streamlit ML Playground
-Located at `http://localhost:8501`
-
-A dedicated interface for data scientists to manually input environmental parameters and test the ML models in real-time.
-
-### 🛡️ Sentry Monitoring
-Integrated full-stack monitoring for production reliability, including error tracking, performance monitoring, and session replay.
-
----
-
-![Screenshots](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=70&section=header&text=Screenshots&fontSize=40&fontColor=ffffff)
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/ayushap18/congenial-waddle/main/public/Gemini_Generated_Image_7c3uv87c3uv87c3u.png" width="45%" alt="Dashboard" />
-  <img src="https://raw.githubusercontent.com/ayushap18/congenial-waddle/main/public/Gemini_Generated_Image_7c3uv87c3uv87c3u.png" width="45%" alt="Mobile View" />
-</div>
-
----
-
-![Deployment](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=70&section=header&text=Deployment&fontSize=40&fontColor=ffffff)
-
-*   **Frontend**: Deploy to [Vercel](https://vercel.com) (Import repo, set `REACT_APP_API_URL`).
-*   **Backend**: Deploy to [Railway](https://railway.app) or [Render](https://render.com) (Python environment, set `OPENWEATHER_API_KEY`).
-
----
-
-![Contributing](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=70&section=header&text=Contributing&fontSize=40&fontColor=ffffff)
-
-Contributions are welcome! Please fork the repository and submit a Pull Request.
-
----
-
-![License](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=70&section=header&text=License&fontSize=40&fontColor=ffffff)
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
-![Acknowledgments](https://capsule-render.vercel.app/api?type=rect&color=gradient&height=70&section=header&text=Acknowledgments&fontSize=40&fontColor=ffffff)
-
-Special thanks to **OpenWeatherMap**, **React Three Fiber**, **FastAPI**, **Sentry**, and **Streamlit**.
-
----
-
-<div align="center">
-
-### 📬 Connect & Support
-
-<a href="https://github.com/ayushap18">
-  <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
-</a>
-<a href="https://linkedin.com/in/ayush">
-  <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
-</a>
-<a href="mailto:your.email@example.com">
-  <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/>
-</a>
-
-<br />
-<br />
-
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=100&section=footer&text=Stay%20Safe%20•%20Stay%20Alert&fontSize=30&animation=fadeIn&fontAlignY=40" width="100%" />
-
-**Built with 💙 by Ayush**
-
-</div>
+🚨 **Stay Safe, Stay Prepared!**

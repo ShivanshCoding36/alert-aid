@@ -1,5 +1,18 @@
 import styled from 'styled-components';
 
+// Helper to filter out custom props from DOM
+const shouldForwardProp = (prop: string) => {
+  const customProps = [
+    'level', 'weight', 'color', 'size', 'direction', 'align', 'justify', 'gap', 'wrap',
+    'columns', 'responsive', 'hasError', 'status', 'variant', 'fullWidth', 'isLoading',
+    'vertical', 'gradient', 'severity', 'isActive', 'difficulty', 'priority', 'stockLevel',
+    'isRead', 'animationDelay', 'shouldPulse', 'trend', 'riskLevel', 'fullScreen',
+    '$level', '$weight', '$color', '$size', '$direction', '$align', '$justify', '$gap', '$wrap',
+    '$columns', '$responsive', '$hasError', '$status', '$variant', '$fullWidth', '$isLoading'
+  ];
+  return !customProps.includes(prop);
+};
+
 // Professional Dark Mode Components with Enterprise Aesthetics
 
 // Exclusive Dark Mode Card - Professional dark elevation
@@ -33,7 +46,9 @@ export const Card = styled.div`
 `;
 
 // Enhanced Button Component - Red/coral focused with smooth transitions and gradients
-export const Button = styled.button<{
+export const Button = styled.button.withConfig({
+  shouldForwardProp: (prop) => !['variant', 'size', 'fullWidth'].includes(prop)
+})<{
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
@@ -193,14 +208,21 @@ export const Button = styled.button<{
 `;
 
 // Typography components - Enhanced with warm colors and improved readability
-export const Heading = styled.h1<{
+export const Heading = styled.h1.withConfig({
+  shouldForwardProp: (prop) => !['level', 'weight', 'color', '$level', '$weight', '$color'].includes(prop)
+})<{
+  $level?: 1 | 2 | 3 | 4 | 5 | 6;
+  $weight?: 'normal' | 'medium' | 'semibold' | 'bold';
+  $color?: 'primary' | 'secondary' | 'disabled' | 'inverse' | 'coral';
+  // Legacy props for backward compatibility
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   weight?: 'normal' | 'medium' | 'semibold' | 'bold';
   color?: 'primary' | 'secondary' | 'disabled' | 'inverse' | 'coral';
 }>`
   font-family: ${({ theme }) => theme.typography.fontFamily.primary};
-  font-weight: ${({ weight, theme }) => {
-    switch (weight) {
+  font-weight: ${({ $weight, weight, theme }) => {
+    const val = $weight || weight;
+    switch (val) {
       case 'normal': return theme.typography.fontWeight.normal;
       case 'medium': return theme.typography.fontWeight.medium;
       case 'bold': return theme.typography.fontWeight.bold;
@@ -210,8 +232,9 @@ export const Heading = styled.h1<{
   line-height: ${({ theme }) => theme.typography.lineHeight.tight};
   margin: 0;
   
-  ${({ color, theme }) => {
-    switch (color) {
+  ${({ $color, color, theme }) => {
+    const val = $color || color;
+    switch (val) {
       case 'primary': return `color: ${theme.colors.text.primary};`;
       case 'secondary': return `color: ${theme.colors.text.secondary};`;
       case 'disabled': return `color: ${theme.colors.text.disabled};`;
@@ -221,8 +244,9 @@ export const Heading = styled.h1<{
     }
   }};
   
-  ${({ level, theme }) => {
-    switch (level) {
+  ${({ $level, level, theme }) => {
+    const val = $level || level;
+    switch (val) {
       case 1:
         return `font-size: ${theme.typography.fontSize['5xl']};`;
       case 2:
@@ -237,29 +261,23 @@ export const Heading = styled.h1<{
         return `font-size: ${theme.typography.fontSize.lg};`;
     }
   }}
-  
-  ${({ color, theme }) => {
-    switch (color) {
-      case 'secondary':
-        return `color: ${theme.colors.text.secondary};`;
-      case 'disabled':
-        return `color: ${theme.colors.text.disabled};`;
-      case 'inverse':
-        return `color: ${theme.colors.text.inverse};`;
-      default:
-        return `color: ${theme.colors.text.primary};`;
-    }
-  }}
 `;
 
-export const Text = styled.p<{
+export const Text = styled.p.withConfig({
+  shouldForwardProp: (prop) => !['size', 'weight', 'color', '$size', '$weight', '$color'].includes(prop)
+})<{
+  $size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl';
+  $weight?: 'normal' | 'medium' | 'semibold' | 'bold';
+  $color?: 'primary' | 'secondary' | 'tertiary' | 'muted' | 'disabled' | 'inverse' | 'coral';
+  // Legacy props for backward compatibility
   size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl';
   weight?: 'normal' | 'medium' | 'semibold' | 'bold';
   color?: 'primary' | 'secondary' | 'tertiary' | 'muted' | 'disabled' | 'inverse' | 'coral';
 }>`
   font-family: ${({ theme }) => theme.typography.fontFamily.primary};
-  font-size: ${({ size, theme }) => {
-    switch (size) {
+  font-size: ${({ $size, size, theme }) => {
+    const val = $size || size;
+    switch (val) {
       case 'xs': return theme.typography.fontSize.xs;
       case 'sm': return theme.typography.fontSize.sm;
       case 'lg': return theme.typography.fontSize.lg;
@@ -267,8 +285,9 @@ export const Text = styled.p<{
       default: return theme.typography.fontSize.base;
     }
   }};
-  font-weight: ${({ weight, theme }) => {
-    switch (weight) {
+  font-weight: ${({ $weight, weight, theme }) => {
+    const val = $weight || weight;
+    switch (val) {
       case 'medium': return theme.typography.fontWeight.medium;
       case 'semibold': return theme.typography.fontWeight.semibold;
       case 'bold': return theme.typography.fontWeight.bold;
@@ -278,8 +297,9 @@ export const Text = styled.p<{
   line-height: ${({ theme }) => theme.typography.lineHeight.relaxed}; /* More readable */
   margin: 0;
   
-  ${({ color, theme }) => {
-    switch (color) {
+  ${({ $color, color, theme }) => {
+    const val = $color || color;
+    switch (val) {
       case 'secondary':
         return `color: ${theme.colors.text.secondary};`;
       case 'tertiary':
@@ -299,14 +319,19 @@ export const Text = styled.p<{
 `;
 
 // Layout components - Enhanced with warm aesthetics
-export const Container = styled.div<{
+export const Container = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['maxWidth', 'padding', '$maxWidth', '$padding'].includes(prop)
+})<{
+  $maxWidth?: string;
+  $padding?: string;
+  // Legacy props for backward compatibility
   maxWidth?: string;
   padding?: string;
 }>`
   width: 100%;
-  max-width: ${({ maxWidth }) => maxWidth || '1920px'};
+  max-width: ${({ $maxWidth, maxWidth }) => $maxWidth || maxWidth || '1920px'};
   margin: 0 auto;
-  padding: ${({ padding, theme }) => padding || `0 ${theme.spacing[6]}`};
+  padding: ${({ $padding, padding, theme }) => $padding || padding || `0 ${theme.spacing[6]}`};
   background: ${({ theme }) => theme.colors.surface.default}; /* Warm background */
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   
@@ -315,18 +340,24 @@ export const Container = styled.div<{
   }
 `;
 
-export const Grid = styled.div<{
+export const Grid = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['columns', 'gap', 'responsive', '$columns', '$gap', '$responsive'].includes(prop)
+})<{
+  $columns?: number;
+  $gap?: string;
+  $responsive?: boolean;
+  // Legacy props for backward compatibility
   columns?: number;
   gap?: string;
   responsive?: boolean;
 }>`
   display: grid;
-  grid-template-columns: repeat(${({ columns = 1 }) => columns}, 1fr);
-  gap: ${({ gap, theme }) => gap || theme.spacing[6]};
+  grid-template-columns: repeat(${({ $columns, columns = 1 }) => $columns || columns}, 1fr);
+  gap: ${({ $gap, gap, theme }) => $gap || gap || theme.spacing[6]};
   
-  ${({ responsive, columns, theme }) => responsive && `
+  ${({ $responsive, responsive, $columns, columns, theme }) => ($responsive || responsive) && `
     @media (max-width: ${theme.breakpoints.lg}) {
-      grid-template-columns: repeat(${Math.max(1, (columns || 1) - 1)}, 1fr);
+      grid-template-columns: repeat(${Math.max(1, ($columns || columns || 1) - 1)}, 1fr);
     }
     
     @media (max-width: ${theme.breakpoints.md}) {
@@ -335,7 +366,15 @@ export const Grid = styled.div<{
   `}
 `;
 
-export const Flex = styled.div<{
+export const Flex = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['direction', 'align', 'justify', 'gap', 'wrap', '$direction', '$align', '$justify', '$gap', '$wrap'].includes(prop)
+})<{
+  $direction?: 'row' | 'column';
+  $align?: 'start' | 'center' | 'end' | 'stretch';
+  $justify?: 'start' | 'center' | 'end' | 'between' | 'around';
+  $gap?: string;
+  $wrap?: boolean;
+  // Legacy props for backward compatibility (will be deprecated)
   direction?: 'row' | 'column';
   align?: 'start' | 'center' | 'end' | 'stretch';
   justify?: 'start' | 'center' | 'end' | 'between' | 'around';
@@ -343,9 +382,10 @@ export const Flex = styled.div<{
   wrap?: boolean;
 }>`
   display: flex;
-  flex-direction: ${({ direction = 'row' }) => direction};
-  align-items: ${({ align = 'start' }) => {
-    switch (align) {
+  flex-direction: ${({ $direction, direction = 'row' }) => $direction || direction};
+  align-items: ${({ $align, align = 'start' }) => {
+    const val = $align || align;
+    switch (val) {
       case 'start': return 'flex-start';
       case 'end': return 'flex-end';
       case 'center': return 'center';
@@ -353,8 +393,9 @@ export const Flex = styled.div<{
       default: return 'flex-start';
     }
   }};
-  justify-content: ${({ justify = 'start' }) => {
-    switch (justify) {
+  justify-content: ${({ $justify, justify = 'start' }) => {
+    const val = $justify || justify;
+    switch (val) {
       case 'start': return 'flex-start';
       case 'end': return 'flex-end';
       case 'center': return 'center';
@@ -363,12 +404,14 @@ export const Flex = styled.div<{
       default: return 'flex-start';
     }
   }};
-  gap: ${({ gap, theme }) => gap || theme.spacing[4]};
-  ${({ wrap }) => wrap && 'flex-wrap: wrap;'}
+  gap: ${({ $gap, gap, theme }) => $gap || gap || theme.spacing[4]};
+  ${({ $wrap, wrap }) => ($wrap || wrap) && 'flex-wrap: wrap;'}
 `;
 
 // Input Components - Warm, friendly styling with coral accents
-export const Input = styled.input<{
+export const Input = styled.input.withConfig({
+  shouldForwardProp: (prop) => !['hasError', 'size'].includes(prop)
+})<{
   hasError?: boolean;
   size?: 'sm' | 'md' | 'lg';
 }>`
@@ -580,7 +623,9 @@ export const Badge = styled.span<{
 `;
 
 // Loading Spinner - Warm coral animation
-export const Spinner = styled.div<{ size?: 'sm' | 'md' | 'lg' }>`
+export const Spinner = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['size'].includes(prop)
+})<{ size?: 'sm' | 'md' | 'lg' }>`
   border: 3px solid ${({ theme }) => theme.colors.primary[100]}; /* Light coral base */
   border-top: 3px solid ${({ theme }) => theme.colors.primary[500]}; /* Coral spinner */
   border-radius: 50%;
@@ -636,7 +681,9 @@ const components = {
 export default components;
 
 // Status indicator
-export const StatusIndicator = styled.div<{
+export const StatusIndicator = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['status', 'size'].includes(prop)
+})<{
   status?: 'success' | 'warning' | 'danger' | 'info';
   size?: 'sm' | 'md' | 'lg';
 }>`

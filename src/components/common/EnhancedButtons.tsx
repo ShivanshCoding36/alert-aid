@@ -128,7 +128,7 @@ export const DangerButton = styled(BaseButton)`
 // Special pulsing button for high-risk scenarios
 export const PulseButton = styled(PrimaryButton)<{ shouldPulse?: boolean }>`
   ${({ shouldPulse }) => shouldPulse && css`
-    animation: ${pulse} 2s infinite;
+    ${css`animation: ${pulse} 2s infinite;`}
   `}
 `;
 
@@ -143,7 +143,7 @@ export const EmergencyButton = styled(BaseButton)`
   box-shadow: 
     0 4px 12px rgba(239, 68, 68, 0.4),
     0 0 0 0 rgba(239, 68, 68, 0.7);
-  animation: ${pulse} 2s infinite;
+  ${css`animation: ${pulse} 2s infinite;`}
   
   &:hover:not(:disabled) {
     background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { Clock, MapPin, WifiOff, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { productionColors, productionAnimations } from '../../styles/production-ui-system';
 
@@ -14,7 +14,7 @@ const pulse = keyframes`
 `;
 
 // Base Badge
-const Badge = styled.div<{ variant: 'success' | 'error' | 'warning' | 'info' | 'neutral' }>`
+const Badge = styled.div<{ $variant: 'success' | 'error' | 'warning' | 'info' | 'neutral' }>`
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -25,27 +25,27 @@ const Badge = styled.div<{ variant: 'success' | 'error' | 'warning' | 'info' | '
   border: 1px solid;
   transition: all ${productionAnimations.duration.normal} ${productionAnimations.easing.smooth};
   
-  background: ${({ variant }) => {
-    if (variant === 'success') return 'rgba(34, 197, 94, 0.1)';
-    if (variant === 'error') return 'rgba(239, 68, 68, 0.1)';
-    if (variant === 'warning') return 'rgba(251, 191, 36, 0.1)';
-    if (variant === 'info') return 'rgba(59, 130, 246, 0.1)';
+  background: ${({ $variant }) => {
+    if ($variant === 'success') return 'rgba(34, 197, 94, 0.1)';
+    if ($variant === 'error') return 'rgba(239, 68, 68, 0.1)';
+    if ($variant === 'warning') return 'rgba(251, 191, 36, 0.1)';
+    if ($variant === 'info') return 'rgba(59, 130, 246, 0.1)';
     return 'rgba(255, 255, 255, 0.05)';
   }};
   
-  border-color: ${({ variant }) => {
-    if (variant === 'success') return 'rgba(34, 197, 94, 0.3)';
-    if (variant === 'error') return 'rgba(239, 68, 68, 0.3)';
-    if (variant === 'warning') return 'rgba(251, 191, 36, 0.3)';
-    if (variant === 'info') return 'rgba(59, 130, 246, 0.3)';
+  border-color: ${({ $variant }) => {
+    if ($variant === 'success') return 'rgba(34, 197, 94, 0.3)';
+    if ($variant === 'error') return 'rgba(239, 68, 68, 0.3)';
+    if ($variant === 'warning') return 'rgba(251, 191, 36, 0.3)';
+    if ($variant === 'info') return 'rgba(59, 130, 246, 0.3)';
     return 'rgba(255, 255, 255, 0.1)';
   }};
   
-  color: ${({ variant }) => {
-    if (variant === 'success') return productionColors.status.success;
-    if (variant === 'error') return productionColors.status.error;
-    if (variant === 'warning') return productionColors.status.warning;
-    if (variant === 'info') return productionColors.status.info;
+  color: ${({ $variant }) => {
+    if ($variant === 'success') return productionColors.status.success;
+    if ($variant === 'error') return productionColors.status.error;
+    if ($variant === 'warning') return productionColors.status.warning;
+    if ($variant === 'info') return productionColors.status.info;
     return productionColors.text.secondary;
   }};
   
@@ -65,7 +65,7 @@ const PulsingDot = styled.div<{ color: string }>`
   height: 8px;
   border-radius: 50%;
   background: ${({ color }) => color};
-  animation: ${pulse} 2s ease-in-out infinite;
+  ${css`animation: ${pulse} 2s ease-in-out infinite;`}
 `;
 
 // Last Updated Badge
@@ -85,7 +85,7 @@ export const LastUpdatedBadge: React.FC<LastUpdatedBadgeProps> = ({ timestamp, c
   };
 
   return (
-    <Badge variant="neutral" className={className}>
+    <Badge $variant="neutral" className={className}>
       <Clock />
       <span>{getTimeAgo(timestamp)}</span>
     </Badge>
@@ -105,7 +105,7 @@ export const LiveStatusBadge: React.FC<LiveStatusBadgeProps> = ({
   className 
 }) => {
   return (
-    <Badge variant={isLive ? 'success' : 'error'} className={className}>
+    <Badge $variant={isLive ? 'success' : 'error'} className={className}>
       {isLive && <PulsingDot color={productionColors.status.success} />}
       {!isLive && <WifiOff />}
       <span>{isLive ? label : 'Offline'}</span>
@@ -126,7 +126,7 @@ export const GPSStatusBadge: React.FC<GPSStatusBadgeProps> = ({
   className 
 }) => {
   return (
-    <Badge variant={enabled ? 'info' : 'neutral'} className={className}>
+    <Badge $variant={enabled ? 'info' : 'neutral'} className={className}>
       <MapPin />
       <span>{location || (enabled ? 'GPS Active' : 'Manual Location')}</span>
     </Badge>
@@ -165,7 +165,7 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
   };
 
   return (
-    <Badge variant={getVariant()} className={className}>
+    <Badge $variant={getVariant()} className={className}>
       {getIcon()}
       <span>{getLabel()}</span>
     </Badge>
@@ -185,7 +185,7 @@ export const APIStatusBadge: React.FC<APIStatusBadgeProps> = ({
   className 
 }) => {
   return (
-    <Badge variant={isOperational ? 'success' : 'error'} className={className}>
+    <Badge $variant={isOperational ? 'success' : 'error'} className={className}>
       {isOperational ? <CheckCircle /> : <XCircle />}
       <span>{name}</span>
     </Badge>
@@ -209,7 +209,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   className 
 }) => {
   return (
-    <Badge variant={variant} className={className}>
+    <Badge $variant={variant} className={className}>
       {pulse && <PulsingDot color={
         variant === 'success' ? productionColors.status.success :
         variant === 'error' ? productionColors.status.error :

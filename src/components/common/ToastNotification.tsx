@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
 import { productionColors, productionAnimations } from '../../styles/production-ui-system';
 
@@ -68,7 +68,7 @@ const ToastItem = styled.div<{ type: 'success' | 'error' | 'warning' | 'info'; i
   pointer-events: auto;
   position: relative;
   overflow: hidden;
-  animation: ${({ isExiting }) => isExiting ? slideOut : slideIn} 0.3s ${productionAnimations.easing.smooth};
+  ${({ isExiting }) => isExiting ? css`animation: ${slideOut} 0.3s ${productionAnimations.easing.smooth};` : css`animation: ${slideIn} 0.3s ${productionAnimations.easing.smooth};`}
   
   @media (max-width: 768px) {
     min-width: unset;
@@ -150,7 +150,7 @@ const ProgressBar = styled.div<{ duration: number; type: 'success' | 'error' | '
     if (type === 'warning') return productionColors.status.warning;
     return productionColors.status.info;
   }};
-  animation: ${progressBar} ${({ duration }) => duration}ms linear;
+  ${({ duration }) => css`animation: ${progressBar} ${duration}ms linear;`}
 `;
 
 // Toast Type

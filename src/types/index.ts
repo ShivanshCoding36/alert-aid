@@ -35,6 +35,7 @@ export interface ForecastData {
   precipitation: number;
   temperature: number;
   windSpeed: number;
+  conditions?: string;  // Weather conditions like 'Clear', 'Cloudy', 'Rain'
 }
 
 export interface IncidentData {

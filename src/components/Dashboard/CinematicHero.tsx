@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { MapPin, Clock, Shield, AlertTriangle, TrendingUp } from 'lucide-react';
 import EnhancedWeatherCard from './cards/EnhancedWeatherCard';
 
@@ -13,14 +13,14 @@ const pulseAnimation = keyframes`
   50% { opacity: 0.7; }
 `;
 
-const HeroContainer = styled.div<{ riskLevel: string }>`
+const HeroContainer = styled.div<{ $riskLevel: string }>`
   position: relative;
   height: 60vh;
   min-height: 500px;
   width: 100%;
   overflow: hidden;
   background: ${props => {
-    switch (props.riskLevel) {
+    switch (props.$riskLevel) {
       case 'high':
       case 'critical':
         return `linear-gradient(135deg, 
@@ -105,7 +105,7 @@ const LocationInfo = styled.div`
   border-radius: 12px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  animation: ${floatAnimation} 3s ease-in-out infinite;
+  ${css`animation: ${floatAnimation} 3s ease-in-out infinite;`}
 `;
 
 const LocationText = styled.div`
@@ -132,7 +132,7 @@ const StatusBadges = styled.div`
   flex-wrap: wrap;
 `;
 
-const StatusBadge = styled.div<{ variant: 'success' | 'warning' | 'danger' | 'info' }>`
+const StatusBadge = styled.div<{ $variant: 'success' | 'warning' | 'danger' | 'info' }>`
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -144,7 +144,7 @@ const StatusBadge = styled.div<{ variant: 'success' | 'warning' | 'danger' | 'in
   border: 1px solid rgba(255, 255, 255, 0.1);
   
   background: ${props => {
-    switch (props.variant) {
+    switch (props.$variant) {
       case 'success': return 'rgba(72, 187, 120, 0.2)';
       case 'warning': return 'rgba(251, 191, 36, 0.2)';
       case 'danger': return 'rgba(245, 101, 101, 0.2)';
@@ -153,7 +153,7 @@ const StatusBadge = styled.div<{ variant: 'success' | 'warning' | 'danger' | 'in
   }};
   
   color: ${props => {
-    switch (props.variant) {
+    switch (props.$variant) {
       case 'success': return '#68d391';
       case 'warning': return '#fbd38d';
       case 'danger': return '#fc8181';
@@ -161,7 +161,7 @@ const StatusBadge = styled.div<{ variant: 'success' | 'warning' | 'danger' | 'in
     }
   }};
   
-  animation: ${props => props.variant === 'danger' ? pulseAnimation : 'none'} 2s ease-in-out infinite;
+  ${props => props.$variant === 'danger' && css`animation: ${pulseAnimation} 2s ease-in-out infinite;`}
 `;
 
 const CenterStats = styled.div`
@@ -218,7 +218,7 @@ const WeatherInfo = styled.div`
 
 const WeatherIcon = styled.div`
   font-size: 3rem;
-  animation: ${floatAnimation} 4s ease-in-out infinite;
+  ${css`animation: ${floatAnimation} 4s ease-in-out infinite;`}
 `;
 
 const WeatherDetails = styled.div`
@@ -293,7 +293,7 @@ const CinematicHero: React.FC<CinematicHeroProps> = ({
   };
 
   return (
-    <HeroContainer riskLevel={getRiskLevel()}>
+    <HeroContainer $riskLevel={getRiskLevel()}>
       <HeroContent>
         <TopOverlay>
           <LocationInfo>
@@ -308,20 +308,20 @@ const CinematicHero: React.FC<CinematicHeroProps> = ({
           </LocationInfo>
           
           <StatusBadges>
-            <StatusBadge variant={getAlertVariant()}>
+            <StatusBadge $variant={getAlertVariant()}>
               <Shield size={16} />
               Risk: {getRiskLevel().toUpperCase()}
             </StatusBadge>
             
             {prediction?.confidence && (
-              <StatusBadge variant="info">
+              <StatusBadge $variant="info">
                 <TrendingUp size={16} />
                 Confidence: {Math.round(prediction.confidence * 100)}%
               </StatusBadge>
             )}
             
             {alerts?.count > 0 && (
-              <StatusBadge variant="warning">
+              <StatusBadge $variant="warning">
                 <AlertTriangle size={16} />
                 {alerts.count} Active Alert{alerts.count !== 1 ? 's' : ''}
               </StatusBadge>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { 
   Cloud, 
   Sun, 
@@ -48,7 +48,7 @@ const WidgetContainer = styled.div`
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
   position: relative;
   overflow: hidden;
-  animation: ${slideIn} 0.6s ease-out;
+  ${css`animation: ${slideIn} 0.6s ease-out;`}
   
   &::before {
     content: '';
@@ -83,36 +83,40 @@ const MainWeatherPanel = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.05);
 `;
 
-const WeatherIcon = styled.div<{ risk: number }>`
+const WeatherIcon = styled.div<{ $risk: number }>`
   width: 120px;
   height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: ${({ risk }) => {
-    if (risk >= 7) return 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(249, 115, 22, 0.2))';
-    if (risk >= 4) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 179, 8, 0.2))';
+  background: ${({ $risk }) => {
+    if ($risk >= 7) return 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(249, 115, 22, 0.2))';
+    if ($risk >= 5) return 'linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(245, 158, 11, 0.2))';
+    if ($risk >= 3) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 179, 8, 0.2))';
     return 'linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.2))';
   }};
-  border: 2px solid ${({ risk }) => {
-    if (risk >= 7) return '#EF4444';
-    if (risk >= 4) return '#F59E0B';
+  border: 2px solid ${({ $risk }) => {
+    if ($risk >= 7) return '#EF4444';
+    if ($risk >= 5) return '#F97316';
+    if ($risk >= 3) return '#F59E0B';
     return '#22C55E';
   }};
-  box-shadow: ${({ risk }) => {
-    if (risk >= 7) return '0 8px 32px rgba(239, 68, 68, 0.3)';
-    if (risk >= 4) return '0 8px 32px rgba(245, 158, 11, 0.3)';
+  box-shadow: ${({ $risk }) => {
+    if ($risk >= 7) return '0 8px 32px rgba(239, 68, 68, 0.3)';
+    if ($risk >= 5) return '0 8px 32px rgba(249, 115, 22, 0.3)';
+    if ($risk >= 3) return '0 8px 32px rgba(245, 158, 11, 0.3)';
     return '0 8px 32px rgba(34, 197, 94, 0.3)';
   }};
-  animation: ${float} 3s ease-in-out infinite;
+  ${css`animation: ${float} 3s ease-in-out infinite;`}
   
   svg {
     width: 64px;
     height: 64px;
-    color: ${({ risk }) => {
-      if (risk >= 7) return '#EF4444';
-      if (risk >= 4) return '#F59E0B';
+    color: ${({ $risk }) => {
+      if ($risk >= 7) return '#EF4444';
+      if ($risk >= 5) return '#F97316';
+      if ($risk >= 3) return '#F59E0B';
       return '#22C55E';
     }};
   }
@@ -175,7 +179,7 @@ const LiveDot = styled.span`
   height: 6px;
   border-radius: 50%;
   background: #22C55E;
-  animation: ${pulse} 2s ease-in-out infinite;
+  ${css`animation: ${pulse} 2s ease-in-out infinite;`}
 `;
 
 // Right Panel - Details & Risk
@@ -234,22 +238,25 @@ const MetricValue = styled.div`
 `;
 
 // Risk Assessment Card
-const RiskCard = styled.div<{ risk: number }>`
+const RiskCard = styled.div<{ $risk: number }>`
   padding: 20px;
   border-radius: 12px;
-  background: ${({ risk }) => {
-    if (risk >= 7) return 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(249, 115, 22, 0.15))';
-    if (risk >= 4) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(234, 179, 8, 0.15))';
+  background: ${({ $risk }) => {
+    if ($risk >= 7) return 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(249, 115, 22, 0.15))';
+    if ($risk >= 5) return 'linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(245, 158, 11, 0.15))';
+    if ($risk >= 3) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(234, 179, 8, 0.15))';
     return 'linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15))';
   }};
-  border: 2px solid ${({ risk }) => {
-    if (risk >= 7) return 'rgba(239, 68, 68, 0.3)';
-    if (risk >= 4) return 'rgba(245, 158, 11, 0.3)';
+  border: 2px solid ${({ $risk }) => {
+    if ($risk >= 7) return 'rgba(239, 68, 68, 0.3)';
+    if ($risk >= 5) return 'rgba(249, 115, 22, 0.3)';
+    if ($risk >= 3) return 'rgba(245, 158, 11, 0.3)';
     return 'rgba(34, 197, 94, 0.3)';
   }};
-  box-shadow: ${({ risk }) => {
-    if (risk >= 7) return '0 8px 24px rgba(239, 68, 68, 0.2)';
-    if (risk >= 4) return '0 8px 24px rgba(245, 158, 11, 0.2)';
+  box-shadow: ${({ $risk }) => {
+    if ($risk >= 7) return '0 8px 24px rgba(239, 68, 68, 0.2)';
+    if ($risk >= 5) return '0 8px 24px rgba(249, 115, 22, 0.2)';
+    if ($risk >= 3) return '0 8px 24px rgba(245, 158, 11, 0.2)';
     return '0 8px 24px rgba(34, 197, 94, 0.2)';
   }};
 `;
@@ -261,32 +268,34 @@ const RiskHeader = styled.div`
   margin-bottom: 12px;
 `;
 
-const RiskLevel = styled.div<{ risk: number }>`
+const RiskLevel = styled.div<{ $risk: number }>`
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 18px;
   font-weight: 700;
-  color: ${({ risk }) => {
-    if (risk >= 7) return '#EF4444';
-    if (risk >= 4) return '#F59E0B';
+  color: ${({ $risk }) => {
+    if ($risk >= 7) return '#EF4444';
+    if ($risk >= 5) return '#F97316';
+    if ($risk >= 3) return '#F59E0B';
     return '#22C55E';
   }};
   
   svg {
     width: 20px;
     height: 20px;
-    animation: ${pulse} 2s ease-in-out infinite;
+    ${css`animation: ${pulse} 2s ease-in-out infinite;`}
   }
 `;
 
-const RiskScore = styled.div<{ risk: number }>`
+const RiskScore = styled.div<{ $risk: number }>`
   font-size: 32px;
   font-weight: 800;
-  background: ${({ risk }) => {
-    if (risk >= 7) return 'linear-gradient(135deg, #EF4444 0%, #F97316 100%)';
-    if (risk >= 4) return 'linear-gradient(135deg, #F59E0B 0%, #EAB308 100%)';
-    return 'linear-gradient(135deg, #22C55E 0%, #10B981 100%)';
+  background: ${({ $risk }) => {
+    if ($risk >= 7) return 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)';
+    if ($risk >= 5) return 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)';
+    if ($risk >= 3) return 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)';
+    return 'linear-gradient(135deg, #22C55E 0%, #16A34A 100%)';
   }};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -317,26 +326,50 @@ const EnhancedWeatherWidget: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const calculateWeatherRisk = (data: WeatherData): number => {
-    let risk = 0;
+    let risk = 1; // Base risk - always some minimal risk
     
-    // Temperature extremes
-    if (data.temp > 40 || data.temp < 0) risk += 3;
+    // Temperature factors (more granular)
+    if (data.temp > 45 || data.temp < -5) risk += 3;
+    else if (data.temp > 40 || data.temp < 0) risk += 2.5;
     else if (data.temp > 35 || data.temp < 5) risk += 2;
+    else if (data.temp > 32 || data.temp < 10) risk += 1;
+    else if (data.temp > 28) risk += 0.5; // Warm but not extreme
     
-    // Wind speed
-    if (data.windSpeed > 50) risk += 3;
-    else if (data.windSpeed > 30) risk += 2;
+    // Wind speed (more granular)
+    if (data.windSpeed > 60) risk += 3;
+    else if (data.windSpeed > 40) risk += 2.5;
+    else if (data.windSpeed > 25) risk += 1.5;
+    else if (data.windSpeed > 15) risk += 0.5;
     
-    // Severe conditions
-    if (data.condition.toLowerCase().includes('storm') || 
-        data.condition.toLowerCase().includes('thunder')) risk += 2;
-    if (data.condition.toLowerCase().includes('snow')) risk += 1.5;
-    if (data.condition.toLowerCase().includes('rain')) risk += 1;
+    // Humidity factors
+    if (data.humidity > 90) risk += 1;
+    else if (data.humidity > 80) risk += 0.5;
+    else if (data.humidity < 20) risk += 0.5; // Very dry conditions
+    
+    // Visibility factors
+    if (data.visibility < 1) risk += 2;
+    else if (data.visibility < 3) risk += 1;
+    else if (data.visibility < 5) risk += 0.5;
+    
+    // Weather conditions
+    const cond = data.condition.toLowerCase();
+    if (cond.includes('storm') || cond.includes('thunder')) risk += 2.5;
+    else if (cond.includes('heavy rain') || cond.includes('torrential')) risk += 2;
+    else if (cond.includes('snow') || cond.includes('blizzard')) risk += 2;
+    else if (cond.includes('rain') || cond.includes('drizzle')) risk += 1;
+    else if (cond.includes('fog') || cond.includes('mist')) risk += 0.8;
+    else if (cond.includes('haze') || cond.includes('smoke')) risk += 0.5;
+    else if (cond.includes('cloud') || cond.includes('overcast')) risk += 0.3;
     
     // UV Index
-    if (data.uvIndex > 8) risk += 1;
+    if (data.uvIndex > 10) risk += 1.5;
+    else if (data.uvIndex > 8) risk += 1;
+    else if (data.uvIndex > 6) risk += 0.5;
     
-    return Math.min(risk, 10);
+    // Pressure factors (extreme pressure can indicate storms)
+    if (data.pressure < 990 || data.pressure > 1030) risk += 0.5;
+    
+    return Math.min(Math.max(risk, 1), 10); // Ensure between 1-10
   };
 
   const getWeatherIcon = (condition: string) => {
@@ -351,8 +384,9 @@ const EnhancedWeatherWidget: React.FC = () => {
 
   const getRiskMessage = (risk: number): string => {
     if (risk >= 7) return 'Severe weather conditions detected. Take extra precautions and monitor updates closely.';
-    if (risk >= 4) return 'Moderate weather risk. Stay informed and be prepared for changing conditions.';
-    return 'Weather conditions are favorable. Normal safety precautions apply.';
+    if (risk >= 5) return 'Elevated weather risk. Stay alert and be prepared for changing conditions.';
+    if (risk >= 3) return 'Moderate conditions. Standard safety precautions recommended.';
+    return 'Weather conditions are favorable. Enjoy your day with normal precautions.';
   };
 
   useEffect(() => {
@@ -473,7 +507,7 @@ const EnhancedWeatherWidget: React.FC = () => {
   return (
     <WidgetContainer>
       <MainWeatherPanel>
-        <WeatherIcon risk={risk}>
+        <WeatherIcon $risk={risk}>
           <WeatherIconComponent />
         </WeatherIcon>
         <Temperature>{weather.temp}°C</Temperature>
@@ -540,13 +574,13 @@ const EnhancedWeatherWidget: React.FC = () => {
           </MetricCard>
         </MetricsGrid>
 
-        <RiskCard risk={risk}>
+        <RiskCard $risk={risk}>
           <RiskHeader>
-            <RiskLevel risk={risk}>
+            <RiskLevel $risk={risk}>
               <AlertTriangle />
-              {risk >= 7 ? 'High Risk' : risk >= 4 ? 'Moderate Risk' : 'Low Risk'}
+              {risk >= 7 ? 'High Risk' : risk >= 5 ? 'Elevated Risk' : risk >= 3 ? 'Moderate Risk' : 'Low Risk'}
             </RiskLevel>
-            <RiskScore risk={risk}>{risk.toFixed(1)}</RiskScore>
+            <RiskScore $risk={risk}>{risk.toFixed(1)}</RiskScore>
           </RiskHeader>
           <RiskDescription>{getRiskMessage(risk)}</RiskDescription>
         </RiskCard>
