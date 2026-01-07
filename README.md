@@ -4,13 +4,17 @@
 
 ![Alert-AID](https://img.shields.io/badge/🚨_Alert--AID-Disaster_Prediction_System-red?style=for-the-badge)
 
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-success?style=flat-square)](https://github.com/ayushap18/congenial-waddle)
-[![React](https://img.shields.io/badge/React-18.x-61dafb?style=flat-square&logo=react)](https://reactjs.org/)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-GitHub_Pages-blue?style=for-the-badge)](https://anshiii-01.github.io/alert-aid)
+
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-success?style=flat-square)](https://github.com/Anshiii-01/alert-aid)
+[![React](https://img.shields.io/badge/React-19.x-61dafb?style=flat-square&logo=react)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776ab?style=flat-square&logo=python)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
 **A real-time disaster monitoring and emergency response application featuring ML-powered predictions, interactive evacuation maps, and live weather alerts.**
+
+### 🌐 [Live Demo: https://anshiii-01.github.io/alert-aid](https://anshiii-01.github.io/alert-aid)
 
 [🚀 Quick Start](#-quick-start) • [📸 Screenshots](#-screenshots) • [✨ Features](#-features) • [🛠️ Tech Stack](#-tech-stack)
 
