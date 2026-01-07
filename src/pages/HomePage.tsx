@@ -50,16 +50,31 @@ const HeroSection = styled.div`
   grid-template-columns: 1fr 400px;
   gap: 40px;
   align-items: center;
+  padding: 0 20px; /* Add padding to prevent edge overflow */
+  overflow: hidden; /* Prevent content from overflowing container */
   
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
     text-align: center;
+    padding: 0 16px; /* Adequate padding on smaller screens */
+  }
+  
+  @media (min-width: 768px) and (max-width: 1024px) {
+    padding: 0 24px; /* Optimized padding for tablets */
+    gap: 32px;
   }
 `;
 
 const HeroContent = styled.div`
+  overflow: hidden; /* Prevent text overflow */
+  
   @media (max-width: 1024px) {
     order: 1;
+    max-width: 100%; /* Ensure content doesn't exceed container */
+  }
+  
+  @media (min-width: 768px) and (max-width: 1024px) {
+    padding: 0 16px; /* Add padding on tablets to prevent edge overflow */
   }
 `;
 
@@ -197,7 +212,7 @@ const LocationText = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 64px;
+  font-size: clamp(36px, 5vw, 64px); /* Fluid typography: min 36px, preferred 5vw, max 64px */
   font-weight: 800;
   background: linear-gradient(135deg, ${productionColors.brand.primary}, ${productionColors.brand.secondary}, #f59e0b);
   background-size: 200% 200%;
@@ -206,21 +221,36 @@ const Title = styled.h1`
   -webkit-text-fill-color: transparent;
   margin-bottom: 16px;
   line-height: 1.1;
+  word-wrap: break-word; /* Prevent text overflow */
+  overflow-wrap: break-word;
   
   @media (max-width: 768px) {
-    font-size: 48px;
+    font-size: clamp(32px, 8vw, 48px); /* Smaller fluid range for mobile */
+  }
+  
+  @media (min-width: 768px) and (max-width: 1024px) {
+    font-size: clamp(40px, 6vw, 56px); /* Optimized for tablets */
+    padding: 0 20px; /* Add padding to prevent edge overflow */
   }
 `;
 
 const Subtitle = styled.p`
-  font-size: 20px;
+  font-size: clamp(16px, 2vw, 20px); /* Fluid typography for subtitle */
   color: ${productionColors.text.secondary};
   max-width: 600px;
   line-height: 1.6;
   margin-bottom: 32px;
+  word-wrap: break-word; /* Prevent text overflow */
+  overflow-wrap: break-word;
   
   @media (max-width: 1024px) {
     margin: 0 auto 32px;
+    max-width: 90%; /* Prevent edge overflow on tablets */
+    padding: 0 20px;
+  }
+  
+  @media (min-width: 768px) and (max-width: 1024px) {
+    font-size: clamp(17px, 2.2vw, 19px); /* Optimized for tablets */
   }
 `;
 
