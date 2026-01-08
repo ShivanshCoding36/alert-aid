@@ -24,6 +24,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import logger from './utils/logger';
 import { productionColors } from './styles/production-ui-system';
 import './utils/locationOverride';
+import Footer from "./components/Footer";
 
 // Skip to content link for accessibility
 const SkipToContent = styled.a`
@@ -110,7 +111,9 @@ const AppContent: React.FC = () => {
             <Route path="/alerts" element={<AlertsPage />} />
             <Route path="/evacuation" element={<EvacuationPage />} />
             <Route path="/verify" element={<VerificationDashboard />} />
+            
           </Routes>
+          <Footer />
         </ErrorBoundary>
       </div>
       
